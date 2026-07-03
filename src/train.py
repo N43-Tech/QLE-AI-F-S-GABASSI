@@ -1,10 +1,16 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
+import os
 import random
+import sys
 import time
+from dataclasses import asdict
+from datetime import datetime, timezone
+from functools import partial
 from pathlib import Path
 from typing import Any
 
@@ -13,18 +19,182 @@ from torch.nn.utils import clip_grad_norm_
 from torch.optim import AdamW
 from torch.utils.data import DataLoader
 
-from src.dataset import DatasetCausal
+from src.dataset import DatasetDialogosBPE
 from src.model import ConfigModelo, MiniLLM
-from src.tokenizer import TokenizadorBytes
+from src.tokenizer_bpe import TokenizadorBPE
 
 
-TOKENIZADOR_VERSAO = "bytes_utf8_v1"
+FORMATO_CHECKPOINT = "qle_bpe_v1"
+VERSAO_CHECKPOINT = 1
+NOME_IA = "QLE"
 
 
-def escolher_dispositivo() -> torch.device:
+class ErroTreinamento(RuntimeError):
+    """Erro controlado do pipeline de treinamento da QLE."""
+
+
+class AgendadorWarmupCoseno:
     """
-    Escolhe automaticamente o melhor dispositivo disponível.
+    Warmup linear seguido de decaimento cosseno.
+
+    O estado salvo contém o número de atualizações já realizadas.
+    O próximo learning rate é calculado com base nesse número.
     """
+
+    def __init__(
+        self,
+        otimizador: AdamW,
+        *,
+        total_passos: int,
+        warmup_passos: int,
+        lr_max: float,
+        lr_min: float,
+    ) -> None:
+        if total_passos <= 0:
+            raise ValueError("total_passos precisa ser positivo.")
+
+        if not 0 <= warmup_passos < total_passos:
+            raise ValueError(
+                "warmup_passos precisa estar entre 0 e total_passos - 1."
+            )
+
+        if lr_max <= 0:
+            raise ValueError("lr_max precisa ser positivo.")
+
+        if not 0 <= lr_min <= lr_max:
+            raise ValueError(
+                "lr_min precisa estar entre 0 e lr_max."
+            )
+
+        self.otimizador = otimizador
+        self.total_passos = int(total_passos)
+        self.warmup_passos = int(warmup_passos)
+        self.lr_max = float(lr_max)
+        self.lr_min = float(lr_min)
+        self.passo_atual = 0
+
+    def _calcular_lr(
+        self,
+        indice_passo: int,
+    ) -> float:
+        if self.warmup_passos > 0 and indice_passo < self.warmup_passos:
+            return (
+                self.lr_max
+                * (indice_passo + 1)
+                / self.warmup_passos
+            )
+
+        inicio_coseno = self.warmup_passos
+        quantidade_coseno = max(
+            1,
+            self.total_passos - inicio_coseno - 1,
+        )
+
+        progresso = (
+            indice_passo - inicio_coseno
+        ) / quantidade_coseno
+
+        progresso = min(
+            max(progresso, 0.0),
+            1.0,
+        )
+
+        fator = 0.5 * (
+            1.0 + math.cos(math.pi * progresso)
+        )
+
+        return (
+            self.lr_min
+            + (self.lr_max - self.lr_min) * fator
+        )
+
+    def preparar_proximo_passo(self) -> float:
+        lr = self._calcular_lr(
+            self.passo_atual
+        )
+
+        for grupo in self.otimizador.param_groups:
+            grupo["lr"] = lr
+
+        return lr
+
+    def registrar_passo(self) -> None:
+        self.passo_atual += 1
+
+    def get_last_lr(self) -> list[float]:
+        return [
+            float(grupo["lr"])
+            for grupo in self.otimizador.param_groups
+        ]
+
+    def state_dict(self) -> dict[str, Any]:
+        return {
+            "passo_atual": self.passo_atual,
+            "total_passos": self.total_passos,
+            "warmup_passos": self.warmup_passos,
+            "lr_max": self.lr_max,
+            "lr_min": self.lr_min,
+        }
+
+    def load_state_dict(
+        self,
+        estado: dict[str, Any],
+    ) -> None:
+        passo = int(
+            estado.get("passo_atual", 0)
+        )
+
+        if not 0 <= passo <= self.total_passos:
+            raise ValueError(
+                f"Passo inválido no agendador: {passo}."
+            )
+
+        self.passo_atual = passo
+
+
+def configurar_utf8() -> None:
+    for fluxo in (
+        sys.stdout,
+        sys.stderr,
+        sys.stdin,
+    ):
+        if hasattr(fluxo, "reconfigure"):
+            fluxo.reconfigure(
+                encoding="utf-8"
+            )
+
+
+def escolher_dispositivo(
+    solicitado: str = "auto",
+) -> torch.device:
+    solicitado = solicitado.lower()
+
+    if solicitado == "cpu":
+        return torch.device("cpu")
+
+    if solicitado == "cuda":
+        if not torch.cuda.is_available():
+            raise ErroTreinamento(
+                "CUDA foi solicitada, mas não está disponível."
+            )
+        return torch.device("cuda")
+
+    if solicitado == "mps":
+        disponivel = (
+            hasattr(torch.backends, "mps")
+            and torch.backends.mps.is_available()
+        )
+
+        if not disponivel:
+            raise ErroTreinamento(
+                "MPS foi solicitado, mas não está disponível."
+            )
+        return torch.device("mps")
+
+    if solicitado != "auto":
+        raise ErroTreinamento(
+            f"Dispositivo inválido: {solicitado}."
+        )
 
     if torch.cuda.is_available():
         return torch.device("cuda")
@@ -38,62 +208,144 @@ def escolher_dispositivo() -> torch.device:
     return torch.device("cpu")
 
 
-def configurar_sementes(semente: int) -> None:
-    """
-    Configura sementes para tornar os experimentos reproduzíveis.
-    """
-
+def configurar_sementes(
+    semente: int,
+    deterministico: bool,
+) -> None:
     random.seed(semente)
     torch.manual_seed(semente)
 
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(semente)
 
+    if deterministico:
+        torch.use_deterministic_algorithms(
+            True,
+            warn_only=True,
+        )
+
+        if hasattr(
+            torch.backends,
+            "cudnn",
+        ):
+            torch.backends.cudnn.benchmark = False
+            torch.backends.cudnn.deterministic = True
+
+
+def inicializar_worker(
+    worker_id: int,
+    *,
+    semente_base: int,
+) -> None:
+    semente = semente_base + worker_id
+    random.seed(semente)
+    torch.manual_seed(semente)
+
+
+def agora_utc_iso() -> str:
+    return datetime.now(
+        timezone.utc
+    ).isoformat(timespec="seconds")
+
+
+def sha256_arquivo(
+    caminho: Path,
+) -> str:
+    digest = hashlib.sha256()
+
+    with caminho.open("rb") as arquivo:
+        for bloco in iter(
+            lambda: arquivo.read(
+                1024 * 1024
+            ),
+            b"",
+        ):
+            digest.update(bloco)
+
+    return digest.hexdigest()
+
+
+def dados_arquivo(
+    caminho: Path,
+) -> dict[str, Any]:
+    return {
+        "caminho": str(
+            caminho.resolve()
+        ),
+        "nome": caminho.name,
+        "tamanho_bytes": (
+            caminho.stat().st_size
+        ),
+        "sha256": sha256_arquivo(
+            caminho
+        ),
+    }
+
 
 def carregar_config(
     caminho: Path,
-) -> tuple[ConfigModelo, dict[str, Any]]:
-    """
-    Carrega a configuração JSON do modelo e do treinamento.
-    """
-
+) -> tuple[
+    ConfigModelo,
+    dict[str, Any],
+]:
     if not caminho.exists():
-        raise FileNotFoundError(
-            f"Arquivo de configuração não encontrado: {caminho}"
+        raise ErroTreinamento(
+            "Arquivo de configuração não encontrado: "
+            f"{caminho.resolve()}"
         )
 
-    dados = json.loads(
-        caminho.read_text(encoding="utf-8-sig")
-    )
+    try:
+        dados = json.loads(
+            caminho.read_text(
+                encoding="utf-8-sig"
+            )
+        )
+    except json.JSONDecodeError as erro:
+        raise ErroTreinamento(
+            f"JSON inválido em {caminho}: {erro}"
+        ) from erro
+
+    if not isinstance(dados, dict):
+        raise ErroTreinamento(
+            "A configuração principal precisa ser um objeto JSON."
+        )
 
     if "modelo" not in dados:
-        raise KeyError(
+        raise ErroTreinamento(
             "A configuração não possui a seção 'modelo'."
         )
 
     if "treino" not in dados:
-        raise KeyError(
+        raise ErroTreinamento(
             "A configuração não possui a seção 'treino'."
         )
 
-    configuracao_modelo = ConfigModelo(
+    cfg_modelo = ConfigModelo(
         **dados["modelo"]
     )
+    cfg_modelo.validar()
 
-    configuracao_treino = dict(
+    cfg_treino = dict(
         dados["treino"]
     )
 
-    return configuracao_modelo, configuracao_treino
+    return cfg_modelo, cfg_treino
 
 
-def validar_configuracao_treino(
+def valor_config(
     configuracao: dict[str, Any],
-) -> None:
-    """
-    Verifica os parâmetros obrigatórios do treinamento.
-    """
+    nome: str,
+    padrao: Any,
+) -> Any:
+    return configuracao.get(
+        nome,
+        padrao,
+    )
 
+
+def validar_config_treino(
+    cfg: dict[str, Any],
+) -> None:
     obrigatorios = (
         "batch_size",
         "passos",
@@ -106,199 +358,73 @@ def validar_configuracao_treino(
     )
 
     ausentes = [
-        nome
-        for nome in obrigatorios
-        if nome not in configuracao
+        chave
+        for chave in obrigatorios
+        if chave not in cfg
     ]
 
     if ausentes:
-        raise KeyError(
-            "Parâmetros ausentes na seção 'treino': "
+        raise ErroTreinamento(
+            "Campos ausentes na configuração de treino: "
             + ", ".join(ausentes)
         )
 
-    if int(configuracao["batch_size"]) <= 0:
-        raise ValueError(
-            "batch_size precisa ser maior que zero."
-        )
-
-    if int(configuracao["passos"]) <= 0:
-        raise ValueError(
-            "passos precisa ser maior que zero."
-        )
-
-    if float(configuracao["lr_max"]) <= 0:
-        raise ValueError(
-            "lr_max precisa ser maior que zero."
-        )
-
-    if float(configuracao["lr_min"]) < 0:
-        raise ValueError(
-            "lr_min não pode ser negativo."
-        )
-
-    if float(configuracao["grad_clip"]) <= 0:
-        raise ValueError(
-            "grad_clip precisa ser maior que zero."
-        )
-
-
-def taxa_aprendizado(
-    passo: int,
-    total: int,
-    warmup: int,
-    lr_max: float,
-    lr_min: float,
-) -> float:
-    """
-    Warmup linear seguido de decaimento cosseno.
-    """
-
-    if passo < warmup:
-        return (
-            lr_max
-            * (passo + 1)
-            / max(1, warmup)
-        )
-
-    progresso = (
-        (passo - warmup)
-        / max(1, total - warmup)
+    inteiros_positivos = (
+        "batch_size",
+        "passos",
+        "log_intervalo",
     )
 
-    progresso = min(
-        max(progresso, 0.0),
-        1.0,
-    )
+    for nome in inteiros_positivos:
+        if int(cfg[nome]) <= 0:
+            raise ErroTreinamento(
+                f"{nome} precisa ser maior que zero."
+            )
 
-    fator_cosseno = 0.5 * (
-        1.0
-        + math.cos(math.pi * progresso)
-    )
+    passos = int(cfg["passos"])
+    warmup = int(cfg["warmup_passos"])
 
-    return (
-        lr_min
-        + (lr_max - lr_min)
-        * fator_cosseno
-    )
-
-
-def perplexidade_segura(perda: float) -> float:
-    """
-    Calcula perplexidade evitando overflow numérico.
-    """
-
-    return math.exp(
-        min(perda, 20.0)
-    )
-
-
-def verificar_texto_corrompido(texto: str) -> None:
-    """
-    Emite um aviso quando encontra sinais comuns de texto
-    UTF-8 interpretado incorretamente.
-    """
-
-    sinais = (
-        "UsuÃ",
-        "vocÃ",
-        "inteligÃ",
-        "automaÃ",
-        "├",
-        "�",
-    )
-
-    encontrados = [
-        sinal
-        for sinal in sinais
-        if sinal in texto
-    ]
-
-    if encontrados:
-        print(
-            "\nAVISO: o corpus pode conter caracteres "
-            "corrompidos."
+    if not 0 <= warmup < passos:
+        raise ErroTreinamento(
+            "warmup_passos precisa estar entre 0 e passos - 1."
         )
 
-        print(
-            "Padrões encontrados:",
-            ", ".join(repr(x) for x in encontrados),
+    lr_max = float(cfg["lr_max"])
+    lr_min = float(cfg["lr_min"])
+
+    if lr_max <= 0:
+        raise ErroTreinamento(
+            "lr_max precisa ser positivo."
         )
 
-        print(
-            "Corrija o corpus antes de realizar um "
-            "treinamento longo.\n"
+    if not 0 <= lr_min <= lr_max:
+        raise ErroTreinamento(
+            "lr_min precisa estar entre 0 e lr_max."
         )
 
-
-def dividir_tokens(
-    tokens: list[int],
-    comprimento_contexto: int,
-    fracao_validacao: float,
-) -> tuple[list[int], list[int]]:
-    """
-    Divide o corpus em treino e validação.
-
-    A validação utiliza o trecho final do corpus, evitando que
-    as mesmas janelas apareçam nos dois conjuntos.
-    """
-
-    if not 0.0 < fracao_validacao < 0.5:
-        raise ValueError(
-            "A fração de validação deve estar entre 0 e 0.5."
+    if float(cfg["weight_decay"]) < 0:
+        raise ErroTreinamento(
+            "weight_decay não pode ser negativo."
         )
 
-    minimo = comprimento_contexto + 2
-
-    if len(tokens) < minimo * 2:
-        raise ValueError(
-            "Corpus pequeno demais para criar treino e validação. "
-            f"São necessários pelo menos {minimo * 2} tokens."
+    if float(cfg["grad_clip"]) <= 0:
+        raise ErroTreinamento(
+            "grad_clip precisa ser positivo."
         )
-
-    quantidade_validacao = max(
-        minimo,
-        int(len(tokens) * fracao_validacao),
-    )
-
-    quantidade_validacao = min(
-        quantidade_validacao,
-        len(tokens) - minimo,
-    )
-
-    ponto_corte = (
-        len(tokens)
-        - quantidade_validacao
-    )
-
-    tokens_treino = tokens[:ponto_corte]
-    tokens_validacao = tokens[ponto_corte:]
-
-    return tokens_treino, tokens_validacao
 
 
 def criar_loader(
-    tokens: list[int],
-    comprimento_contexto: int,
+    dataset: DatasetDialogosBPE,
+    *,
     batch_size: int,
     embaralhar: bool,
     dispositivo: torch.device,
     semente: int,
     num_workers: int,
 ) -> DataLoader:
-    """
-    Cria um DataLoader para modelagem causal.
-    """
-
-    dataset = DatasetCausal(
-        tokens,
-        comprimento_contexto,
-    )
-
     if len(dataset) == 0:
-        raise ValueError(
-            "O dataset ficou vazio. Aumente o corpus ou "
-            "reduza comprimento_max."
+        raise ErroTreinamento(
+            "O dataset está vazio."
         )
 
     batch_real = min(
@@ -309,26 +435,36 @@ def criar_loader(
     gerador = torch.Generator()
     gerador.manual_seed(semente)
 
+    worker_init = partial(
+        inicializar_worker,
+        semente_base=semente,
+    )
+
     return DataLoader(
         dataset,
         batch_size=batch_real,
         shuffle=embaralhar,
         drop_last=False,
         num_workers=num_workers,
-        pin_memory=dispositivo.type == "cuda",
-        persistent_workers=num_workers > 0,
+        pin_memory=(
+            dispositivo.type == "cuda"
+        ),
+        persistent_workers=(
+            num_workers > 0
+        ),
         generator=gerador,
+        worker_init_fn=worker_init,
     )
 
 
 def proximo_lote(
     iterador: Any,
     loader: DataLoader,
-) -> tuple[Any, torch.Tensor, torch.Tensor]:
-    """
-    Obtém o próximo lote e reinicia o loader quando necessário.
-    """
-
+) -> tuple[
+    Any,
+    torch.Tensor,
+    torch.Tensor,
+]:
     try:
         x, y = next(iterador)
     except StopIteration:
@@ -338,22 +474,30 @@ def proximo_lote(
     return iterador, x, y
 
 
+def perplexidade_segura(
+    perda: float,
+) -> float:
+    return math.exp(
+        min(perda, 20.0)
+    )
+
+
 def avaliar_modelo(
     modelo: MiniLLM,
     loader: DataLoader,
     dispositivo: torch.device,
     max_lotes: int,
-) -> float:
-    """
-    Calcula a loss média no conjunto de validação.
-    """
-
+) -> tuple[float, int]:
     modelo.eval()
 
-    perdas: list[float] = []
+    soma_perda = 0.0
+    quantidade_tokens = 0
+    lotes_avaliados = 0
 
     with torch.inference_mode():
-        for indice, (x, y) in enumerate(loader):
+        for indice, (x, y) in enumerate(
+            loader
+        ):
             if indice >= max_lotes:
                 break
 
@@ -361,87 +505,202 @@ def avaliar_modelo(
                 dispositivo,
                 non_blocking=True,
             )
-
             y = y.to(
                 dispositivo,
                 non_blocking=True,
             )
 
-            _, perda = modelo(x, y)
+            _, perda = modelo(
+                x,
+                y,
+            )
 
             if perda is None:
-                raise RuntimeError(
+                raise ErroTreinamento(
                     "O modelo não retornou loss na validação."
                 )
 
-            perdas.append(
-                float(perda.item())
+            perda_valor = float(
+                perda.item()
             )
+
+            if not math.isfinite(
+                perda_valor
+            ):
+                raise FloatingPointError(
+                    "Loss não finita detectada na validação."
+                )
+
+            tokens_validos = int(
+                (y != -100)
+                .sum()
+                .item()
+            )
+
+            if tokens_validos <= 0:
+                continue
+
+            soma_perda += (
+                perda_valor
+                * tokens_validos
+            )
+            quantidade_tokens += tokens_validos
+            lotes_avaliados += 1
 
     modelo.train()
 
-    if not perdas:
-        raise RuntimeError(
-            "Nenhum lote foi avaliado."
+    if quantidade_tokens <= 0:
+        raise ErroTreinamento(
+            "Nenhum token válido foi avaliado."
         )
 
-    return sum(perdas) / len(perdas)
+    return (
+        soma_perda / quantidade_tokens,
+        lotes_avaliados,
+    )
 
 
 def mover_estado_otimizador(
     otimizador: AdamW,
     dispositivo: torch.device,
 ) -> None:
-    """
-    Move os tensores internos do otimizador para o dispositivo.
-    """
-
     for estado in otimizador.state.values():
         for chave, valor in estado.items():
-            if isinstance(valor, torch.Tensor):
+            if isinstance(
+                valor,
+                torch.Tensor,
+            ):
                 estado[chave] = valor.to(
                     dispositivo
                 )
 
 
-def salvar_checkpoint(
+def serializar_tokens_especiais(
+    tokenizador: TokenizadorBPE,
+) -> dict[str, int]:
+    return {
+        chave: int(valor)
+        for chave, valor in asdict(
+            tokenizador.especiais
+        ).items()
+    }
+
+
+def escrever_log_jsonl(
     caminho: Path,
-    modelo: MiniLLM,
-    otimizador: AdamW,
-    configuracao_modelo: ConfigModelo,
-    configuracao_treino: dict[str, Any],
-    passo_atual: int,
-    melhor_val_loss: float,
-    tokens_treino: int,
-    tokens_validacao: int,
+    evento: dict[str, Any],
 ) -> None:
-    """
-    Salva pesos, otimizador, configuração e progresso.
-
-    O arquivo temporário reduz o risco de deixar um checkpoint
-    corrompido caso a gravação seja interrompida.
-    """
-
     caminho.parent.mkdir(
         parents=True,
         exist_ok=True,
     )
 
-    temporario = caminho.with_suffix(
-        caminho.suffix + ".tmp"
+    with caminho.open(
+        "a",
+        encoding="utf-8",
+        newline="\n",
+    ) as arquivo:
+        arquivo.write(
+            json.dumps(
+                evento,
+                ensure_ascii=False,
+                separators=(",", ":"),
+            )
+            + "\n"
+        )
+
+
+def salvar_checkpoint(
+    *,
+    caminho: Path,
+    modelo: MiniLLM,
+    otimizador: AdamW,
+    agendador: AgendadorWarmupCoseno,
+    cfg_modelo: ConfigModelo,
+    cfg_treino: dict[str, Any],
+    passo_atual: int,
+    melhor_val_loss: float,
+    ultima_train_loss: float | None,
+    ultima_val_loss: float | None,
+    tokenizador: TokenizadorBPE,
+    caminho_tokenizador: Path,
+    dataset_treino: DatasetDialogosBPE,
+    dataset_validacao: DatasetDialogosBPE,
+    caminho_treino: Path,
+    caminho_validacao: Path,
+) -> None:
+    caminho.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    temporario = caminho.with_name(
+        caminho.name + ".tmp"
     )
 
     dados: dict[str, Any] = {
-        "config_modelo": configuracao_modelo.para_dict(),
-        "config_treino": configuracao_treino,
-        "estado_modelo": modelo.state_dict(),
-        "estado_otimizador": otimizador.state_dict(),
-        "tokenizador": TOKENIZADOR_VERSAO,
+        "formato_checkpoint": FORMATO_CHECKPOINT,
+        "versao_checkpoint": VERSAO_CHECKPOINT,
+        "nome_ia": NOME_IA,
+        "criado_em_utc": agora_utc_iso(),
+        "config_modelo": (
+            cfg_modelo.para_dict()
+        ),
+        "config_treino": cfg_treino,
+        "estado_modelo": (
+            modelo.state_dict()
+        ),
+        "estado_otimizador": (
+            otimizador.state_dict()
+        ),
+        "estado_agendador": (
+            agendador.state_dict()
+        ),
         "passo_atual": passo_atual,
         "passos": passo_atual,
-        "melhor_val_loss": melhor_val_loss,
-        "tokens_treino": tokens_treino,
-        "tokens_validacao": tokens_validacao,
+        "melhor_val_loss": (
+            melhor_val_loss
+        ),
+        "metricas": {
+            "ultima_train_loss": (
+                ultima_train_loss
+            ),
+            "ultima_val_loss": (
+                ultima_val_loss
+            ),
+        },
+        "tokenizador": {
+            "tipo": "bpe",
+            **dados_arquivo(
+                caminho_tokenizador
+            ),
+            "tamanho_vocab": (
+                tokenizador.tamanho_vocab
+            ),
+            "tokens_especiais": (
+                serializar_tokens_especiais(
+                    tokenizador
+                )
+            ),
+        },
+        "datasets": {
+            "treino": {
+                **dados_arquivo(
+                    caminho_treino
+                ),
+                "exemplos": len(
+                    dataset_treino
+                ),
+            },
+            "validacao": {
+                **dados_arquivo(
+                    caminho_validacao
+                ),
+                "exemplos": len(
+                    dataset_validacao
+                ),
+            },
+        },
         "rng_python": random.getstate(),
         "rng_torch": torch.get_rng_state(),
     }
@@ -456,94 +715,214 @@ def salvar_checkpoint(
         temporario,
     )
 
-    temporario.replace(caminho)
-
-
-def restaurar_checkpoint(
-    caminho: Path,
-    modelo: MiniLLM,
-    otimizador: AdamW,
-    configuracao_modelo: ConfigModelo,
-    dispositivo: torch.device,
-) -> tuple[int, float]:
-    """
-    Restaura pesos e, quando disponível, o estado do otimizador.
-    """
-
-    if not caminho.exists():
-        raise FileNotFoundError(
-            f"Checkpoint para retomada não encontrado: {caminho}"
-        )
-
-    print(
-        f"Carregando checkpoint: {caminho.resolve()}"
-    )
-
-    checkpoint = torch.load(
+    os.replace(
+        temporario,
         caminho,
-        map_location=dispositivo,
-        weights_only=False,
     )
 
-    if "estado_modelo" not in checkpoint:
-        raise KeyError(
-            "O checkpoint não possui 'estado_modelo'."
+
+def validar_checkpoint_retomada(
+    checkpoint: dict[str, Any],
+    *,
+    cfg_modelo: ConfigModelo,
+    caminho_tokenizador: Path,
+    caminho_treino: Path,
+    caminho_validacao: Path,
+    permitir_dataset_alterado: bool,
+) -> None:
+    formato = checkpoint.get(
+        "formato_checkpoint"
+    )
+
+    if formato != FORMATO_CHECKPOINT:
+        raise ErroTreinamento(
+            "O checkpoint não é compatível com o pipeline BPE atual. "
+            f"Formato encontrado: {formato!r}."
         )
 
-    config_checkpoint = checkpoint.get(
+    config_salva = checkpoint.get(
         "config_modelo"
     )
 
-    config_atual = (
-        configuracao_modelo.para_dict()
+    if config_salva != cfg_modelo.para_dict():
+        raise ErroTreinamento(
+            "A arquitetura do checkpoint é diferente da configuração atual."
+        )
+
+    meta_tokenizador = checkpoint.get(
+        "tokenizador",
+        {},
     )
 
-    if (
-        config_checkpoint is not None
-        and config_checkpoint != config_atual
-    ):
-        raise ValueError(
-            "A arquitetura do checkpoint é diferente da "
-            "configuração atual.\n"
-            f"Checkpoint: {config_checkpoint}\n"
-            f"Configuração atual: {config_atual}"
+    hash_salvo = meta_tokenizador.get(
+        "sha256"
+    )
+    hash_atual = sha256_arquivo(
+        caminho_tokenizador
+    )
+
+    if hash_salvo and hash_salvo != hash_atual:
+        raise ErroTreinamento(
+            "O tokenizador atual é diferente do tokenizador "
+            "utilizado pelo checkpoint."
         )
+
+    datasets_salvos = checkpoint.get(
+        "datasets",
+        {},
+    )
+
+    alteracoes: list[str] = []
+
+    for nome, caminho in (
+        ("treino", caminho_treino),
+        ("validacao", caminho_validacao),
+    ):
+        hash_anterior = (
+            datasets_salvos
+            .get(nome, {})
+            .get("sha256")
+        )
+
+        if (
+            hash_anterior
+            and hash_anterior
+            != sha256_arquivo(caminho)
+        ):
+            alteracoes.append(nome)
+
+    if alteracoes and not permitir_dataset_alterado:
+        raise ErroTreinamento(
+            "O dataset foi alterado desde o checkpoint: "
+            + ", ".join(alteracoes)
+            + ". Use --permitir-dataset-alterado somente se essa "
+            "mudança for intencional."
+        )
+
+
+def restaurar_checkpoint(
+    *,
+    caminho: Path,
+    modelo: MiniLLM,
+    otimizador: AdamW,
+    agendador: AgendadorWarmupCoseno,
+    cfg_modelo: ConfigModelo,
+    dispositivo: torch.device,
+    caminho_tokenizador: Path,
+    caminho_treino: Path,
+    caminho_validacao: Path,
+    permitir_dataset_alterado: bool,
+) -> tuple[
+    int,
+    float,
+    float | None,
+    float | None,
+]:
+    if not caminho.exists():
+        raise ErroTreinamento(
+            "Checkpoint para retomada não encontrado: "
+            f"{caminho.resolve()}"
+        )
+
+    try:
+        checkpoint = torch.load(
+            caminho,
+            map_location=dispositivo,
+            weights_only=False,
+        )
+    except (
+        EOFError,
+        OSError,
+        RuntimeError,
+    ) as erro:
+        raise ErroTreinamento(
+            "Não foi possível carregar o checkpoint. "
+            f"Tamanho: {caminho.stat().st_size} bytes. "
+            "O arquivo pode estar corrompido."
+        ) from erro
+
+    if not isinstance(
+        checkpoint,
+        dict,
+    ):
+        raise ErroTreinamento(
+            "O checkpoint não é um dicionário válido."
+        )
+
+    validar_checkpoint_retomada(
+        checkpoint,
+        cfg_modelo=cfg_modelo,
+        caminho_tokenizador=(
+            caminho_tokenizador
+        ),
+        caminho_treino=caminho_treino,
+        caminho_validacao=(
+            caminho_validacao
+        ),
+        permitir_dataset_alterado=(
+            permitir_dataset_alterado
+        ),
+    )
 
     modelo.load_state_dict(
-        checkpoint["estado_modelo"]
+        checkpoint["estado_modelo"],
+        strict=True,
     )
 
-    if "estado_otimizador" in checkpoint:
-        otimizador.load_state_dict(
-            checkpoint["estado_otimizador"]
+    if "estado_otimizador" not in checkpoint:
+        raise ErroTreinamento(
+            "O checkpoint não possui estado do otimizador."
         )
 
-        mover_estado_otimizador(
-            otimizador,
-            dispositivo,
-        )
+    otimizador.load_state_dict(
+        checkpoint["estado_otimizador"]
+    )
+    mover_estado_otimizador(
+        otimizador,
+        dispositivo,
+    )
 
-        print(
-            "Estado do AdamW restaurado."
+    if "estado_agendador" in checkpoint:
+        agendador.load_state_dict(
+            checkpoint[
+                "estado_agendador"
+            ]
         )
     else:
-        print(
-            "AVISO: o checkpoint não possui o estado do "
-            "otimizador. O AdamW será reiniciado."
+        agendador.passo_atual = int(
+            checkpoint.get(
+                "passo_atual",
+                0,
+            )
         )
 
     passo_atual = int(
         checkpoint.get(
             "passo_atual",
-            checkpoint.get("passos", 0),
+            0,
         )
     )
+
+    if agendador.passo_atual != passo_atual:
+        agendador.passo_atual = passo_atual
 
     melhor_val_loss = float(
         checkpoint.get(
             "melhor_val_loss",
             math.inf,
         )
+    )
+
+    metricas = checkpoint.get(
+        "metricas",
+        {},
+    )
+
+    ultima_train_loss = metricas.get(
+        "ultima_train_loss"
+    )
+    ultima_val_loss = metricas.get(
+        "ultima_val_loss"
     )
 
     if "rng_python" in checkpoint:
@@ -564,64 +943,112 @@ def restaurar_checkpoint(
             checkpoint["rng_cuda"]
         )
 
-    print(
-        f"Treinamento retomado a partir do passo "
-        f"{passo_atual:,}."
+    return (
+        passo_atual,
+        melhor_val_loss,
+        ultima_train_loss,
+        ultima_val_loss,
     )
 
-    return passo_atual, melhor_val_loss
 
+def validar_argumentos_numericos(
+    *,
+    validar_cada: int,
+    salvar_cada: int,
+    lotes_validacao: int,
+    acumular_gradientes: int,
+    num_workers: int,
+) -> None:
+    valores_positivos = {
+        "validar_cada": validar_cada,
+        "salvar_cada": salvar_cada,
+        "lotes_validacao": lotes_validacao,
+        "acumular_gradientes": (
+            acumular_gradientes
+        ),
+    }
 
-def caminho_melhor_checkpoint(
-    caminho_saida: Path,
-) -> Path:
-    """
-    Cria um nome como qle_base_melhor.pt.
-    """
+    for nome, valor in valores_positivos.items():
+        if valor <= 0:
+            raise ErroTreinamento(
+                f"{nome} precisa ser positivo."
+            )
 
-    return caminho_saida.with_name(
-        f"{caminho_saida.stem}_melhor"
-        f"{caminho_saida.suffix}"
-    )
+    if num_workers < 0:
+        raise ErroTreinamento(
+            "num_workers não pode ser negativo."
+        )
 
 
 def criar_argumentos() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Treina um modelo Transformer causal inteiramente "
-            "do zero."
+            "Treina a QLE com tokenizador BPE e loss "
+            "supervisionada somente sobre as respostas."
         )
     )
 
     parser.add_argument(
         "--config",
         type=Path,
-        default=Path("config_qle_base.json"),
-        help="Arquivo JSON de configuração.",
+        default=Path(
+            "config_qle_bpe_smoke.json"
+        ),
     )
 
     parser.add_argument(
-        "--corpus",
-        type=Path,
-        default=Path("data/corpus_QLE.txt"),
-        help="Arquivo de texto usado no treinamento.",
-    )
-
-    parser.add_argument(
-        "--saida",
+        "--tokenizador",
         type=Path,
         default=Path(
-            "checkpoints/qle_base_ultima.pt"
+            "tokenizer/qle_bpe_2000.json"
         ),
-        help="Checkpoint mais recente.",
+    )
+
+    parser.add_argument(
+        "--treino",
+        type=Path,
+        default=Path(
+            "data/splits/train.jsonl"
+        ),
+    )
+
+    parser.add_argument(
+        "--validacao",
+        type=Path,
+        default=Path(
+            "data/splits/validation.jsonl"
+        ),
+    )
+
+    parser.add_argument(
+        "--checkpoint",
+        "--saida",
+        dest="checkpoint",
+        type=Path,
+        default=Path(
+            "checkpoints/qle_bpe_ultimo.pt"
+        ),
+    )
+
+    parser.add_argument(
+        "--melhor-checkpoint",
+        type=Path,
+        default=Path(
+            "checkpoints/qle_bpe_melhor.pt"
+        ),
     )
 
     parser.add_argument(
         "--retomar",
         type=Path,
         default=None,
-        help=(
-            "Checkpoint existente para continuar o treinamento."
+    )
+
+    parser.add_argument(
+        "--log",
+        type=Path,
+        default=Path(
+            "logs/treino_qle_bpe.jsonl"
         ),
     )
 
@@ -629,115 +1056,151 @@ def criar_argumentos() -> argparse.Namespace:
         "--passos",
         type=int,
         default=None,
-        help=(
-            "Passo final desejado. Ao retomar do passo 300 "
-            "com --passos 1500, serão executados mais 1200."
-        ),
-    )
-
-    parser.add_argument(
-        "--validacao-fracao",
-        type=float,
-        default=0.10,
-        help="Fração do corpus reservada para validação.",
+        help="Sobrescreve o passo final definido no JSON.",
     )
 
     parser.add_argument(
         "--validar-cada",
         type=int,
         default=None,
-        help="Intervalo entre avaliações.",
     )
 
     parser.add_argument(
         "--salvar-cada",
         type=int,
         default=None,
-        help="Intervalo entre checkpoints.",
     )
 
     parser.add_argument(
         "--lotes-validacao",
         type=int,
         default=None,
-        help="Quantidade máxima de lotes na validação.",
     )
 
     parser.add_argument(
         "--acumular-gradientes",
         type=int,
         default=None,
-        help=(
-            "Número de lotes acumulados antes de atualizar "
-            "os pesos."
-        ),
     )
 
     parser.add_argument(
         "--num-workers",
         type=int,
         default=None,
-        help="Processos auxiliares do DataLoader.",
     )
 
     parser.add_argument(
         "--seed",
         type=int,
         default=42,
-        help="Semente aleatória.",
+    )
+
+    parser.add_argument(
+        "--dispositivo",
+        choices=(
+            "auto",
+            "cpu",
+            "cuda",
+            "mps",
+        ),
+        default="auto",
+    )
+
+    parser.add_argument(
+        "--deterministico",
+        action="store_true",
+    )
+
+    parser.add_argument(
+        "--permitir-dataset-alterado",
+        action="store_true",
     )
 
     parser.add_argument(
         "--somente-avaliar",
         action="store_true",
-        help="Carrega o checkpoint e executa somente validação.",
     )
 
     return parser.parse_args()
 
 
 def main() -> None:
+    configurar_utf8()
     args = criar_argumentos()
 
-    configurar_sementes(args.seed)
+    configurar_sementes(
+        args.seed,
+        args.deterministico,
+    )
 
     cfg_modelo, cfg_treino = carregar_config(
         args.config
     )
 
-    validar_configuracao_treino(
+    if args.passos is not None:
+        if args.passos <= 0:
+            raise ErroTreinamento(
+                "--passos precisa ser positivo."
+            )
+
+        cfg_treino["passos"] = (
+            args.passos
+        )
+
+        if (
+            int(
+                cfg_treino[
+                    "warmup_passos"
+                ]
+            )
+            >= args.passos
+        ):
+            cfg_treino[
+                "warmup_passos"
+            ] = max(
+                0,
+                args.passos // 10,
+            )
+
+    validar_config_treino(
         cfg_treino
     )
 
-    if args.passos is not None:
-        if args.passos <= 0:
-            raise ValueError(
-                "--passos precisa ser maior que zero."
-            )
-
-        cfg_treino["passos"] = args.passos
-
     validar_cada = int(
         args.validar_cada
-        or cfg_treino.get("validar_cada", 100)
+        if args.validar_cada is not None
+        else valor_config(
+            cfg_treino,
+            "validar_cada",
+            100,
+        )
     )
 
     salvar_cada = int(
         args.salvar_cada
-        or cfg_treino.get("salvar_cada", 100)
+        if args.salvar_cada is not None
+        else valor_config(
+            cfg_treino,
+            "salvar_cada",
+            100,
+        )
     )
 
     lotes_validacao = int(
         args.lotes_validacao
-        or cfg_treino.get(
+        if args.lotes_validacao is not None
+        else valor_config(
+            cfg_treino,
             "lotes_validacao",
-            20,
+            30,
         )
     )
 
     acumular_gradientes = int(
         args.acumular_gradientes
-        or cfg_treino.get(
+        if args.acumular_gradientes is not None
+        else valor_config(
+            cfg_treino,
             "acumular_gradientes",
             1,
         )
@@ -746,68 +1209,58 @@ def main() -> None:
     num_workers = int(
         args.num_workers
         if args.num_workers is not None
-        else cfg_treino.get(
+        else valor_config(
+            cfg_treino,
             "num_workers",
             0,
         )
     )
 
-    if validar_cada <= 0:
-        raise ValueError(
-            "validar_cada precisa ser maior que zero."
-        )
-
-    if salvar_cada <= 0:
-        raise ValueError(
-            "salvar_cada precisa ser maior que zero."
-        )
-
-    if lotes_validacao <= 0:
-        raise ValueError(
-            "lotes_validacao precisa ser maior que zero."
-        )
-
-    if acumular_gradientes <= 0:
-        raise ValueError(
-            "acumular_gradientes precisa ser maior que zero."
-        )
-
-    if not args.corpus.exists():
-        raise FileNotFoundError(
-            f"Corpus não encontrado: {args.corpus}"
-        )
-
-    texto = args.corpus.read_text(
-        encoding="utf-8-sig"
+    validar_argumentos_numericos(
+        validar_cada=validar_cada,
+        salvar_cada=salvar_cada,
+        lotes_validacao=lotes_validacao,
+        acumular_gradientes=(
+            acumular_gradientes
+        ),
+        num_workers=num_workers,
     )
 
-    if not texto.strip():
-        raise ValueError(
-            "O corpus está vazio."
+    tokenizador = TokenizadorBPE(
+        args.tokenizador
+    )
+
+    if (
+        tokenizador.tamanho_vocab
+        != cfg_modelo.tamanho_vocab
+    ):
+        raise ErroTreinamento(
+            "O tamanho do vocabulário do tokenizador "
+            f"({tokenizador.tamanho_vocab}) difere da configuração "
+            f"do modelo ({cfg_modelo.tamanho_vocab})."
         )
 
-    verificar_texto_corrompido(texto)
-
-    tokenizador = TokenizadorBytes()
-
-    tokens = tokenizador.codificar(
-        texto,
-        adicionar_bos=True,
-        adicionar_eos=True,
+    dataset_treino = DatasetDialogosBPE(
+        args.treino,
+        tokenizador,
+        cfg_modelo.comprimento_max,
     )
 
-    tokens_treino, tokens_validacao = dividir_tokens(
-        tokens=tokens,
-        comprimento_contexto=cfg_modelo.comprimento_max,
-        fracao_validacao=args.validacao_fracao,
+    dataset_validacao = DatasetDialogosBPE(
+        args.validacao,
+        tokenizador,
+        cfg_modelo.comprimento_max,
     )
 
-    dispositivo = escolher_dispositivo()
+    dispositivo = escolher_dispositivo(
+        args.dispositivo
+    )
 
     loader_treino = criar_loader(
-        tokens=tokens_treino,
-        comprimento_contexto=cfg_modelo.comprimento_max,
-        batch_size=int(cfg_treino["batch_size"]),
+        dataset_treino,
+        batch_size=int(
+            cfg_treino["batch_size"]
+        ),
         embaralhar=True,
         dispositivo=dispositivo,
         semente=args.seed,
@@ -815,12 +1268,13 @@ def main() -> None:
     )
 
     loader_validacao = criar_loader(
-        tokens=tokens_validacao,
-        comprimento_contexto=cfg_modelo.comprimento_max,
-        batch_size=int(cfg_treino["batch_size"]),
+        dataset_validacao,
+        batch_size=int(
+            cfg_treino["batch_size"]
+        ),
         embaralhar=False,
         dispositivo=dispositivo,
-        semente=args.seed,
+        semente=args.seed + 10_000,
         num_workers=num_workers,
     )
 
@@ -830,7 +1284,9 @@ def main() -> None:
 
     otimizador = AdamW(
         modelo.parameters(),
-        lr=float(cfg_treino["lr_max"]),
+        lr=float(
+            cfg_treino["lr_max"]
+        ),
         betas=(0.9, 0.95),
         eps=1e-8,
         weight_decay=float(
@@ -838,52 +1294,84 @@ def main() -> None:
         ),
     )
 
-    passo_inicial = 0
-    melhor_val_loss = math.inf
-
-    if args.retomar is not None:
-        passo_inicial, melhor_val_loss = (
-            restaurar_checkpoint(
-                caminho=args.retomar,
-                modelo=modelo,
-                otimizador=otimizador,
-                configuracao_modelo=cfg_modelo,
-                dispositivo=dispositivo,
-            )
-        )
-
     total_passos = int(
         cfg_treino["passos"]
     )
 
-    if total_passos <= passo_inicial:
-        if not args.somente_avaliar:
-            raise ValueError(
-                f"O checkpoint já está no passo {passo_inicial}, "
-                f"mas o passo final solicitado é {total_passos}."
-            )
+    agendador = AgendadorWarmupCoseno(
+        otimizador,
+        total_passos=total_passos,
+        warmup_passos=int(
+            cfg_treino[
+                "warmup_passos"
+            ]
+        ),
+        lr_max=float(
+            cfg_treino["lr_max"]
+        ),
+        lr_min=float(
+            cfg_treino["lr_min"]
+        ),
+    )
 
-    print("=" * 65)
-    print("TREINAMENTO DA QLE")
-    print("=" * 65)
+    passo_inicial = 0
+    melhor_val_loss = math.inf
+    ultima_train_loss: float | None = None
+    ultima_val_loss: float | None = None
+
+    if args.retomar is not None:
+        (
+            passo_inicial,
+            melhor_val_loss,
+            ultima_train_loss,
+            ultima_val_loss,
+        ) = restaurar_checkpoint(
+            caminho=args.retomar,
+            modelo=modelo,
+            otimizador=otimizador,
+            agendador=agendador,
+            cfg_modelo=cfg_modelo,
+            dispositivo=dispositivo,
+            caminho_tokenizador=(
+                args.tokenizador
+            ),
+            caminho_treino=args.treino,
+            caminho_validacao=(
+                args.validacao
+            ),
+            permitir_dataset_alterado=(
+                args.permitir_dataset_alterado
+            ),
+        )
+
+    if passo_inicial > total_passos:
+        raise ErroTreinamento(
+            f"O checkpoint está no passo {passo_inicial}, "
+            f"acima do passo final {total_passos}."
+        )
+
+    print("=" * 72)
+    print("TREINAMENTO SUPERVISIONADO DA QLE — BPE")
+    print("=" * 72)
     print(f"Dispositivo: {dispositivo}")
     print(
         f"Parâmetros: "
         f"{modelo.contar_parametros():,}"
     )
     print(
-        f"Tokens totais: {len(tokens):,}"
+        f"Vocabulário: "
+        f"{tokenizador.tamanho_vocab:,}"
     )
     print(
-        f"Tokens de treino: "
-        f"{len(tokens_treino):,}"
+        f"Treino: "
+        f"{len(dataset_treino):,} exemplos"
     )
     print(
-        f"Tokens de validação: "
-        f"{len(tokens_validacao):,}"
+        f"Validação: "
+        f"{len(dataset_validacao):,} exemplos"
     )
     print(
-        f"Contexto máximo: "
+        f"Contexto: "
         f"{cfg_modelo.comprimento_max}"
     )
     print(
@@ -891,11 +1379,11 @@ def main() -> None:
         f"{cfg_treino['batch_size']}"
     )
     print(
-        f"Acúmulo de gradientes: "
+        f"Acumulação: "
         f"{acumular_gradientes}"
     )
     print(
-        f"Batch efetivo: "
+        "Batch efetivo: "
         f"{int(cfg_treino['batch_size']) * acumular_gradientes}"
     )
     print(
@@ -904,28 +1392,32 @@ def main() -> None:
     print(
         f"Passo final: {total_passos:,}"
     )
-    print("=" * 65)
+    print("=" * 72)
 
     if args.somente_avaliar:
         if args.retomar is None:
-            raise ValueError(
+            raise ErroTreinamento(
                 "--somente-avaliar exige --retomar."
             )
 
-        val_loss = avaliar_modelo(
-            modelo=modelo,
-            loader=loader_validacao,
-            dispositivo=dispositivo,
-            max_lotes=lotes_validacao,
+        val_loss, lotes = avaliar_modelo(
+            modelo,
+            loader_validacao,
+            dispositivo,
+            lotes_validacao,
         )
 
         print(
             f"val_loss: {val_loss:.4f} | "
-            f"val_ppl: "
-            f"{perplexidade_segura(val_loss):.2f}"
+            f"val_ppl: {perplexidade_segura(val_loss):.2f} | "
+            f"lotes: {lotes}"
         )
-
         return
+
+    if passo_inicial == total_passos:
+        raise ErroTreinamento(
+            "O checkpoint já atingiu o passo final solicitado."
+        )
 
     iterador = iter(
         loader_treino
@@ -933,39 +1425,44 @@ def main() -> None:
 
     inicio_total = time.perf_counter()
     inicio_intervalo = inicio_total
-
     modelo.train()
 
-    melhor_caminho = caminho_melhor_checkpoint(
-        args.saida
+    escrever_log_jsonl(
+        args.log,
+        {
+            "evento": "inicio",
+            "momento_utc": agora_utc_iso(),
+            "passo_inicial": passo_inicial,
+            "passo_final": total_passos,
+            "dispositivo": str(
+                dispositivo
+            ),
+            "parametros": (
+                modelo.contar_parametros()
+            ),
+            "exemplos_treino": len(
+                dataset_treino
+            ),
+            "exemplos_validacao": len(
+                dataset_validacao
+            ),
+        },
     )
 
-    for passo in range(
+    for passo_atual in range(
         passo_inicial,
         total_passos,
     ):
-        lr = taxa_aprendizado(
-            passo=passo,
-            total=total_passos,
-            warmup=int(
-                cfg_treino["warmup_passos"]
-            ),
-            lr_max=float(
-                cfg_treino["lr_max"]
-            ),
-            lr_min=float(
-                cfg_treino["lr_min"]
-            ),
+        lr = (
+            agendador
+            .preparar_proximo_passo()
         )
-
-        for grupo in otimizador.param_groups:
-            grupo["lr"] = lr
 
         otimizador.zero_grad(
             set_to_none=True
         )
 
-        perda_acumulada = 0.0
+        soma_perdas = 0.0
 
         for _ in range(
             acumular_gradientes
@@ -979,58 +1476,79 @@ def main() -> None:
                 dispositivo,
                 non_blocking=True,
             )
-
             y = y.to(
                 dispositivo,
                 non_blocking=True,
             )
 
-            _, perda = modelo(x, y)
+            _, perda = modelo(
+                x,
+                y,
+            )
 
             if perda is None:
-                raise RuntimeError(
+                raise ErroTreinamento(
                     "O modelo não retornou loss."
                 )
 
-            perda_dividida = (
-                perda
-                / acumular_gradientes
-            )
-
-            perda_dividida.backward()
-
-            perda_acumulada += float(
+            perda_valor = float(
                 perda.item()
             )
 
+            if not math.isfinite(
+                perda_valor
+            ):
+                raise FloatingPointError(
+                    "Loss não finita detectada. "
+                    "Reduza o learning rate e valide os dados."
+                )
+
+            (
+                perda
+                / acumular_gradientes
+            ).backward()
+
+            soma_perdas += perda_valor
+
         norma_gradiente = clip_grad_norm_(
             modelo.parameters(),
-            float(cfg_treino["grad_clip"]),
+            float(
+                cfg_treino[
+                    "grad_clip"
+                ]
+            ),
+        )
+
+        norma_valor = float(
+            norma_gradiente
         )
 
         if not math.isfinite(
-            float(norma_gradiente)
+            norma_valor
         ):
             raise FloatingPointError(
-                "Gradiente não finito detectado. "
-                "Reduza o learning rate."
+                "Gradiente não finito detectado."
             )
 
         otimizador.step()
+        agendador.registrar_passo()
 
-        perda_media = (
-            perda_acumulada
+        numero_passo = passo_atual + 1
+        ultima_train_loss = (
+            soma_perdas
             / acumular_gradientes
         )
 
-        passo_atual = passo + 1
-
         deve_logar = (
-            passo == passo_inicial
-            or passo_atual
-            % int(cfg_treino["log_intervalo"])
+            numero_passo == passo_inicial + 1
+            or numero_passo
+            % int(
+                cfg_treino[
+                    "log_intervalo"
+                ]
+            )
             == 0
-            or passo_atual == total_passos
+            or numero_passo == total_passos
         )
 
         if deve_logar:
@@ -1038,128 +1556,237 @@ def main() -> None:
             tempo_intervalo = (
                 agora - inicio_intervalo
             )
-
             tempo_total = (
                 agora - inicio_total
             )
 
             print(
-                f"passo {passo_atual:>6}/"
+                f"passo {numero_passo:>6}/"
                 f"{total_passos} | "
-                f"loss {perda_media:.4f} | "
+                f"loss {ultima_train_loss:.4f} | "
                 f"ppl "
-                f"{perplexidade_segura(perda_media):.2f} | "
+                f"{perplexidade_segura(ultima_train_loss):.2f} | "
                 f"lr {lr:.2e} | "
-                f"grad {float(norma_gradiente):.3f} | "
+                f"grad {norma_valor:.3f} | "
                 f"{tempo_intervalo:.1f}s intervalo | "
                 f"{tempo_total:.1f}s total"
+            )
+
+            escrever_log_jsonl(
+                args.log,
+                {
+                    "evento": "treino",
+                    "momento_utc": agora_utc_iso(),
+                    "passo": numero_passo,
+                    "train_loss": (
+                        ultima_train_loss
+                    ),
+                    "train_ppl": (
+                        perplexidade_segura(
+                            ultima_train_loss
+                        )
+                    ),
+                    "learning_rate": lr,
+                    "grad_norm": (
+                        norma_valor
+                    ),
+                    "tempo_total_segundos": (
+                        tempo_total
+                    ),
+                },
             )
 
             inicio_intervalo = agora
 
         deve_validar = (
-            passo_atual % validar_cada == 0
-            or passo_atual == total_passos
+            numero_passo
+            % validar_cada
+            == 0
+            or numero_passo
+            == total_passos
         )
 
         if deve_validar:
-            val_loss = avaliar_modelo(
-                modelo=modelo,
-                loader=loader_validacao,
-                dispositivo=dispositivo,
-                max_lotes=lotes_validacao,
+            ultima_val_loss, lotes = avaliar_modelo(
+                modelo,
+                loader_validacao,
+                dispositivo,
+                lotes_validacao,
             )
 
             val_ppl = perplexidade_segura(
-                val_loss
+                ultima_val_loss
             )
 
             print(
-                f"VALIDAÇÃO | passo {passo_atual} | "
-                f"val_loss {val_loss:.4f} | "
-                f"val_ppl {val_ppl:.2f}"
+                f"VALIDAÇÃO | passo {numero_passo} | "
+                f"val_loss {ultima_val_loss:.4f} | "
+                f"val_ppl {val_ppl:.2f} | "
+                f"lotes {lotes}"
             )
 
-            if val_loss < melhor_val_loss:
-                melhor_val_loss = val_loss
+            escrever_log_jsonl(
+                args.log,
+                {
+                    "evento": "validacao",
+                    "momento_utc": agora_utc_iso(),
+                    "passo": numero_passo,
+                    "validation_loss": (
+                        ultima_val_loss
+                    ),
+                    "validation_ppl": (
+                        val_ppl
+                    ),
+                    "lotes": lotes,
+                },
+            )
+
+            if (
+                ultima_val_loss
+                < melhor_val_loss
+            ):
+                melhor_val_loss = (
+                    ultima_val_loss
+                )
 
                 salvar_checkpoint(
-                    caminho=melhor_caminho,
+                    caminho=(
+                        args.melhor_checkpoint
+                    ),
                     modelo=modelo,
                     otimizador=otimizador,
-                    configuracao_modelo=cfg_modelo,
-                    configuracao_treino=cfg_treino,
-                    passo_atual=passo_atual,
-                    melhor_val_loss=melhor_val_loss,
-                    tokens_treino=len(tokens_treino),
-                    tokens_validacao=len(
-                        tokens_validacao
+                    agendador=agendador,
+                    cfg_modelo=cfg_modelo,
+                    cfg_treino=cfg_treino,
+                    passo_atual=numero_passo,
+                    melhor_val_loss=(
+                        melhor_val_loss
+                    ),
+                    ultima_train_loss=(
+                        ultima_train_loss
+                    ),
+                    ultima_val_loss=(
+                        ultima_val_loss
+                    ),
+                    tokenizador=tokenizador,
+                    caminho_tokenizador=(
+                        args.tokenizador
+                    ),
+                    dataset_treino=(
+                        dataset_treino
+                    ),
+                    dataset_validacao=(
+                        dataset_validacao
+                    ),
+                    caminho_treino=(
+                        args.treino
+                    ),
+                    caminho_validacao=(
+                        args.validacao
                     ),
                 )
 
                 print(
-                    "Novo melhor checkpoint salvo em: "
-                    f"{melhor_caminho.resolve()}"
+                    "Novo melhor checkpoint: "
+                    f"{args.melhor_checkpoint.resolve()}"
                 )
 
         deve_salvar = (
-            passo_atual % salvar_cada == 0
-            or passo_atual == total_passos
+            numero_passo
+            % salvar_cada
+            == 0
+            or numero_passo
+            == total_passos
         )
 
         if deve_salvar:
             salvar_checkpoint(
-                caminho=args.saida,
+                caminho=args.checkpoint,
                 modelo=modelo,
                 otimizador=otimizador,
-                configuracao_modelo=cfg_modelo,
-                configuracao_treino=cfg_treino,
-                passo_atual=passo_atual,
-                melhor_val_loss=melhor_val_loss,
-                tokens_treino=len(tokens_treino),
-                tokens_validacao=len(
-                    tokens_validacao
+                agendador=agendador,
+                cfg_modelo=cfg_modelo,
+                cfg_treino=cfg_treino,
+                passo_atual=numero_passo,
+                melhor_val_loss=(
+                    melhor_val_loss
+                ),
+                ultima_train_loss=(
+                    ultima_train_loss
+                ),
+                ultima_val_loss=(
+                    ultima_val_loss
+                ),
+                tokenizador=tokenizador,
+                caminho_tokenizador=(
+                    args.tokenizador
+                ),
+                dataset_treino=(
+                    dataset_treino
+                ),
+                dataset_validacao=(
+                    dataset_validacao
+                ),
+                caminho_treino=(
+                    args.treino
+                ),
+                caminho_validacao=(
+                    args.validacao
                 ),
             )
 
             print(
-                "Checkpoint atual salvo em: "
-                f"{args.saida.resolve()}"
+                "Checkpoint atual: "
+                f"{args.checkpoint.resolve()}"
             )
 
-    tempo_final = (
+    tempo_total = (
         time.perf_counter()
         - inicio_total
     )
 
-    print("\n" + "=" * 65)
+    print("\n" + "=" * 72)
     print("TREINAMENTO CONCLUÍDO")
-    print("=" * 65)
-    print(
-        f"Passos realizados nesta execução: "
-        f"{total_passos - passo_inicial:,}"
-    )
+    print("=" * 72)
     print(
         f"Passo total atingido: "
         f"{total_passos:,}"
     )
+    print(
+        f"Última train_loss: "
+        f"{ultima_train_loss:.4f}"
+    )
+
+    if ultima_val_loss is not None:
+        print(
+            f"Última val_loss: "
+            f"{ultima_val_loss:.4f}"
+        )
+
     print(
         f"Melhor val_loss: "
         f"{melhor_val_loss:.4f}"
     )
     print(
         f"Tempo total: "
-        f"{tempo_final:.1f} segundos"
+        f"{tempo_total:.1f} segundos"
     )
     print(
-        f"Último checkpoint: "
-        f"{args.saida.resolve()}"
+        f"Checkpoint atual: "
+        f"{args.checkpoint.resolve()}"
     )
     print(
         f"Melhor checkpoint: "
-        f"{melhor_caminho.resolve()}"
+        f"{args.melhor_checkpoint.resolve()}"
     )
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except ErroTreinamento as erro:
+        print(
+            f"ERRO: {erro}",
+            file=sys.stderr,
+        )
+        raise SystemExit(1) from None

@@ -1,335 +1,805 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import math
+import random
 import sys
 from pathlib import Path
+from typing import Any
 
 import torch
 
 from src.model import ConfigModelo, MiniLLM
-from src.tokenizer import TokenizadorBytes
-from src.train import escolher_dispositivo
+from src.tokenizer_bpe import TokenizadorBPE
 
 
+FORMATO_CHECKPOINT = "qle_bpe_v1"
 NOME_IA = "QLE"
-MARCADOR_USUARIO = "USUARIO:"
-MARCADOR_IA = f"{NOME_IA}:"
+
+
+class ErroGeracao(RuntimeError):
+    """Erro controlado de carregamento ou geração."""
 
 
 def configurar_utf8() -> None:
-    """
-    Configura entrada e saída UTF-8, principalmente no Windows.
-    Evita textos como 'UsuÃ¡rio' e 'vocÃª'.
-    """
-
-    if hasattr(sys.stdout, "reconfigure"):
-        sys.stdout.reconfigure(encoding="utf-8")
-
-    if hasattr(sys.stderr, "reconfigure"):
-        sys.stderr.reconfigure(encoding="utf-8")
-
-    if hasattr(sys.stdin, "reconfigure"):
-        sys.stdin.reconfigure(encoding="utf-8")
+    for fluxo in (
+        sys.stdout,
+        sys.stderr,
+        sys.stdin,
+    ):
+        if hasattr(fluxo, "reconfigure"):
+            fluxo.reconfigure(
+                encoding="utf-8"
+            )
 
 
-def construir_prompt(mensagem: str) -> str:
-    """
-    Converte uma mensagem comum para o formato usado no treinamento.
-    """
+def escolher_dispositivo(
+    solicitado: str = "auto",
+) -> torch.device:
+    solicitado = solicitado.lower()
 
-    mensagem = mensagem.strip()
+    if solicitado == "cpu":
+        return torch.device("cpu")
 
-    return (
-        f"{MARCADOR_USUARIO} {mensagem}\n"
-        f"{MARCADOR_IA}"
+    if solicitado == "cuda":
+        if not torch.cuda.is_available():
+            raise ErroGeracao(
+                "CUDA foi solicitada, mas não está disponível."
+            )
+        return torch.device("cuda")
+
+    if solicitado == "mps":
+        disponivel = (
+            hasattr(torch.backends, "mps")
+            and torch.backends.mps.is_available()
+        )
+
+        if not disponivel:
+            raise ErroGeracao(
+                "MPS foi solicitado, mas não está disponível."
+            )
+        return torch.device("mps")
+
+    if solicitado != "auto":
+        raise ErroGeracao(
+            f"Dispositivo inválido: {solicitado}."
+        )
+
+    if torch.cuda.is_available():
+        return torch.device("cuda")
+
+    if (
+        hasattr(torch.backends, "mps")
+        and torch.backends.mps.is_available()
+    ):
+        return torch.device("mps")
+
+    return torch.device("cpu")
+
+
+def sha256_arquivo(
+    caminho: Path,
+) -> str:
+    digest = hashlib.sha256()
+
+    with caminho.open("rb") as arquivo:
+        for bloco in iter(
+            lambda: arquivo.read(
+                1024 * 1024
+            ),
+            b"",
+        ):
+            digest.update(bloco)
+
+    return digest.hexdigest()
+
+
+def carregar_checkpoint(
+    caminho: Path,
+    dispositivo: torch.device,
+) -> dict[str, Any]:
+    caminho = caminho.resolve()
+
+    if not caminho.exists():
+        raise ErroGeracao(
+            f"Checkpoint não encontrado: {caminho}"
+        )
+
+    if caminho.stat().st_size == 0:
+        raise ErroGeracao(
+            f"O checkpoint está vazio: {caminho}"
+        )
+
+    try:
+        checkpoint = torch.load(
+            caminho,
+            map_location=dispositivo,
+            weights_only=False,
+        )
+    except (
+        EOFError,
+        OSError,
+        RuntimeError,
+    ) as erro:
+        raise ErroGeracao(
+            "Não foi possível carregar o checkpoint. "
+            f"Tamanho: {caminho.stat().st_size} bytes. "
+            "O arquivo pode estar corrompido."
+        ) from erro
+
+    if not isinstance(
+        checkpoint,
+        dict,
+    ):
+        raise ErroGeracao(
+            "O checkpoint não possui formato de dicionário."
+        )
+
+    formato = checkpoint.get(
+        "formato_checkpoint"
     )
 
+    if formato != FORMATO_CHECKPOINT:
+        tokenizador_antigo = checkpoint.get(
+            "tokenizador"
+        )
 
-def cortar_proximo_turno(texto: str) -> str:
-    """
-    Interrompe a resposta quando o modelo começa um novo turno.
-    """
+        raise ErroGeracao(
+            "Checkpoint incompatível com o pipeline BPE. "
+            f"Formato encontrado: {formato!r}; "
+            f"tokenizador encontrado: {tokenizador_antigo!r}. "
+            "Use um checkpoint criado pelo novo src.train."
+        )
 
-    texto = texto.replace("\r\n", "\n").replace("\r", "\n")
+    for chave in (
+        "config_modelo",
+        "estado_modelo",
+    ):
+        if chave not in checkpoint:
+            raise ErroGeracao(
+                f"O checkpoint não possui a chave '{chave}'."
+            )
 
-    marcadores = (
-        "\nUSUARIO:",
-        "\nUsuario:",
-        "\nUsuário:",
-        "\nQLE:",
-        "\nqLE:",
-        "\nASSISTENTE:",
-        "\nAssistente:",
-    )
-
-    posicoes: list[int] = []
-
-    for marcador in marcadores:
-        posicao = texto.find(marcador)
-
-        if posicao >= 0:
-            posicoes.append(posicao)
-
-    if posicoes:
-        texto = texto[: min(posicoes)]
-
-    return texto.strip()
+    return checkpoint
 
 
-def remover_marcadores_repetidos(texto: str) -> str:
-    """
-    Remove marcadores que o modelo possa repetir no começo da resposta.
-    """
-
-    texto = texto.strip()
-
-    prefixos = (
-        "QLE:",
-        "qLE:",
-        "ASSISTENTE:",
-        "Assistente:",
-    )
-
-    alterado = True
-
-    while alterado:
-        alterado = False
-
-        for prefixo in prefixos:
-            if texto.startswith(prefixo):
-                texto = texto[len(prefixo):].lstrip()
-                alterado = True
-
-    return texto.strip()
-
-
-def limpar_resposta(texto: str) -> str:
-    """
-    Aplica as etapas de limpeza na resposta gerada.
-    """
-
-    texto = cortar_proximo_turno(texto)
-    texto = remover_marcadores_repetidos(texto)
-
-    if not texto:
-        return "[A QLE não gerou uma resposta.]"
-
-    return texto
-
-
-def carregar_modelo(
+def resolver_caminho_tokenizador(
+    *,
+    informado: Path | None,
+    checkpoint: dict[str, Any],
     caminho_checkpoint: Path,
-    dispositivo: torch.device | str,
-) -> tuple[MiniLLM, ConfigModelo]:
-    """
-    Carrega a configuração e os pesos presentes no checkpoint.
-    """
-
-    caminho_checkpoint = caminho_checkpoint.resolve()
-
-    if not caminho_checkpoint.exists():
-        raise FileNotFoundError(
-            "\nCheckpoint não encontrado:\n"
-            f"{caminho_checkpoint}\n\n"
-            "Coloque o arquivo dentro de checkpoints ou informe "
-            "outro caminho usando --checkpoint."
+) -> Path:
+    if informado is not None:
+        candidatos = [
+            informado,
+        ]
+    else:
+        meta = checkpoint.get(
+            "tokenizador",
+            {},
+        )
+        valor_meta = meta.get(
+            "caminho"
         )
 
-    if not caminho_checkpoint.is_file():
-        raise FileNotFoundError(
-            f"O caminho não é um arquivo: {caminho_checkpoint}"
+        candidatos: list[Path] = []
+
+        if valor_meta:
+            caminho_meta = Path(
+                str(valor_meta)
+            )
+
+            candidatos.extend(
+                (
+                    caminho_meta,
+                    Path.cwd() / caminho_meta,
+                    caminho_checkpoint
+                    .resolve()
+                    .parent
+                    .parent
+                    / caminho_meta,
+                )
+            )
+
+        candidatos.append(
+            Path(
+                "tokenizer/qle_bpe_2000.json"
+            )
         )
 
-    checkpoint = torch.load(
-        caminho_checkpoint,
-        map_location=dispositivo,
-        weights_only=False,
+    vistos: set[str] = set()
+
+    for candidato in candidatos:
+        resolvido = candidato.expanduser()
+
+        chave = str(
+            resolvido.resolve(
+                strict=False
+            )
+        )
+
+        if chave in vistos:
+            continue
+
+        vistos.add(chave)
+
+        if (
+            resolvido.exists()
+            and resolvido.is_file()
+        ):
+            return resolvido
+
+    caminhos = "\n".join(
+        f"- {item}"
+        for item in candidatos
     )
 
-    if not isinstance(checkpoint, dict):
-        raise TypeError(
-            "O checkpoint não possui o formato esperado de dicionário."
-        )
+    raise ErroGeracao(
+        "Tokenizador BPE não encontrado. "
+        "Caminhos verificados:\n"
+        + caminhos
+    )
 
-    if "config_modelo" not in checkpoint:
-        raise KeyError(
-            "O checkpoint não possui a chave 'config_modelo'."
-        )
 
-    if "estado_modelo" not in checkpoint:
-        raise KeyError(
-            "O checkpoint não possui a chave 'estado_modelo'."
-        )
+def carregar_modelo_e_tokenizador(
+    *,
+    caminho_checkpoint: Path,
+    caminho_tokenizador: Path | None,
+    dispositivo: torch.device,
+) -> tuple[
+    MiniLLM,
+    ConfigModelo,
+    TokenizadorBPE,
+    dict[str, Any],
+    Path,
+]:
+    checkpoint = carregar_checkpoint(
+        caminho_checkpoint,
+        dispositivo,
+    )
 
-    configuracao = ConfigModelo(
+    tokenizador_path = (
+        resolver_caminho_tokenizador(
+            informado=caminho_tokenizador,
+            checkpoint=checkpoint,
+            caminho_checkpoint=(
+                caminho_checkpoint
+            ),
+        )
+    )
+
+    tokenizador = TokenizadorBPE(
+        tokenizador_path
+    )
+
+    cfg = ConfigModelo(
         **checkpoint["config_modelo"]
     )
+    cfg.validar()
 
-    modelo = MiniLLM(configuracao).to(dispositivo)
+    if (
+        tokenizador.tamanho_vocab
+        != cfg.tamanho_vocab
+    ):
+        raise ErroGeracao(
+            "O vocabulário do tokenizador "
+            f"({tokenizador.tamanho_vocab}) difere do modelo "
+            f"({cfg.tamanho_vocab})."
+        )
+
+    meta_tokenizador = checkpoint.get(
+        "tokenizador",
+        {},
+    )
+    hash_salvo = meta_tokenizador.get(
+        "sha256"
+    )
+
+    if (
+        hash_salvo
+        and hash_salvo
+        != sha256_arquivo(
+            tokenizador_path
+        )
+    ):
+        raise ErroGeracao(
+            "O tokenizador informado não é o mesmo utilizado "
+            "no treinamento do checkpoint."
+        )
+
+    modelo = MiniLLM(
+        cfg
+    ).to(dispositivo)
 
     modelo.load_state_dict(
-        checkpoint["estado_modelo"]
+        checkpoint["estado_modelo"],
+        strict=True,
     )
-
     modelo.eval()
 
-    return modelo, configuracao
-
-
-def limitar_prompt_ao_contexto(
-    prompt_ids: list[int],
-    configuracao: ConfigModelo,
-) -> list[int]:
-    """
-    Mantém o final do prompt quando ele ultrapassa o contexto máximo.
-
-    O final é preservado porque contém a pergunta mais recente e o
-    marcador 'QLE:'.
-    """
-
-    comprimento_max = getattr(
-        configuracao,
-        "comprimento_max",
-        None,
+    return (
+        modelo,
+        cfg,
+        tokenizador,
+        checkpoint,
+        tokenizador_path,
     )
 
-    if comprimento_max is None:
-        return prompt_ids
 
-    limite_prompt = max(8, int(comprimento_max) - 1)
+def construir_prompt_ids(
+    *,
+    mensagem: str,
+    tokenizador: TokenizadorBPE,
+    cfg: ConfigModelo,
+) -> list[int]:
+    mensagem = mensagem.strip()
 
-    if len(prompt_ids) <= limite_prompt:
-        return prompt_ids
+    if not mensagem:
+        raise ErroGeracao(
+            "A mensagem está vazia."
+        )
 
-    return prompt_ids[-limite_prompt:]
+    pergunta_ids = tokenizador.codificar(
+        mensagem
+    )
+
+    # <BOS>, <USER> e <ASSISTANT>.
+    limite_pergunta = max(
+        1,
+        cfg.comprimento_max - 3,
+    )
+
+    if len(pergunta_ids) > limite_pergunta:
+        pergunta_ids = pergunta_ids[
+            -limite_pergunta:
+        ]
+
+    return [
+        tokenizador.especiais.bos,
+        tokenizador.especiais.usuario,
+        *pergunta_ids,
+        tokenizador.especiais.assistente,
+    ]
 
 
-def gerar_resposta(
+def aplicar_penalidade_repeticao(
+    logits: torch.Tensor,
+    tokens_gerados: list[int],
+    penalidade: float,
+) -> None:
+    if penalidade == 1.0:
+        return
+
+    for token_id in set(
+        tokens_gerados
+    ):
+        valor = logits[token_id]
+
+        if valor < 0:
+            logits[token_id] = (
+                valor * penalidade
+            )
+        else:
+            logits[token_id] = (
+                valor / penalidade
+            )
+
+
+def tokens_bloqueados_por_ngram(
+    tokens: list[int],
+    tamanho_ngram: int,
+) -> set[int]:
+    if tamanho_ngram <= 0:
+        return set()
+
+    if tamanho_ngram == 1:
+        return set(tokens)
+
+    tamanho_prefixo = (
+        tamanho_ngram - 1
+    )
+
+    if len(tokens) < tamanho_prefixo:
+        return set()
+
+    prefixo_atual = tuple(
+        tokens[-tamanho_prefixo:]
+    )
+
+    bloqueados: set[int] = set()
+
+    limite = (
+        len(tokens)
+        - tamanho_ngram
+        + 1
+    )
+
+    for inicio in range(
+        max(0, limite)
+    ):
+        prefixo = tuple(
+            tokens[
+                inicio:
+                inicio + tamanho_prefixo
+            ]
+        )
+
+        if prefixo == prefixo_atual:
+            proximo_indice = (
+                inicio + tamanho_prefixo
+            )
+
+            if proximo_indice < len(tokens):
+                bloqueados.add(
+                    tokens[
+                        proximo_indice
+                    ]
+                )
+
+    return bloqueados
+
+
+def filtrar_top_k(
+    logits: torch.Tensor,
+    top_k: int,
+) -> torch.Tensor:
+    if top_k <= 0:
+        return logits
+
+    k = min(
+        top_k,
+        logits.numel(),
+    )
+
+    limite = torch.topk(
+        logits,
+        k,
+    ).values[-1]
+
+    return logits.masked_fill(
+        logits < limite,
+        float("-inf"),
+    )
+
+
+def filtrar_top_p(
+    logits: torch.Tensor,
+    top_p: float,
+) -> torch.Tensor:
+    if top_p >= 1.0:
+        return logits
+
+    logits_ordenados, indices = torch.sort(
+        logits,
+        descending=True,
+    )
+
+    probabilidades = torch.softmax(
+        logits_ordenados,
+        dim=-1,
+    )
+    acumuladas = torch.cumsum(
+        probabilidades,
+        dim=-1,
+    )
+
+    remover = acumuladas > top_p
+    remover[1:] = remover[:-1].clone()
+    remover[0] = False
+
+    logits_ordenados = (
+        logits_ordenados.masked_fill(
+            remover,
+            float("-inf"),
+        )
+    )
+
+    resultado = torch.full_like(
+        logits,
+        float("-inf"),
+    )
+
+    resultado.scatter_(
+        0,
+        indices,
+        logits_ordenados,
+    )
+
+    return resultado
+
+
+def amostrar_token(
+    *,
+    logits: torch.Tensor,
+    temperatura: float,
+    top_k: int,
+    top_p: float,
+) -> int:
+    if temperatura == 0:
+        return int(
+            torch.argmax(
+                logits
+            ).item()
+        )
+
+    logits = logits / temperatura
+    logits = filtrar_top_k(
+        logits,
+        top_k,
+    )
+    logits = filtrar_top_p(
+        logits,
+        top_p,
+    )
+
+    if not torch.isfinite(
+        logits
+    ).any():
+        raise ErroGeracao(
+            "Todos os tokens foram bloqueados pelos filtros de geração."
+        )
+
+    probabilidades = torch.softmax(
+        logits,
+        dim=-1,
+    )
+
+    if not torch.isfinite(
+        probabilidades
+    ).all():
+        raise ErroGeracao(
+            "Probabilidades não finitas durante a geração."
+        )
+
+    return int(
+        torch.multinomial(
+            probabilidades,
+            num_samples=1,
+        ).item()
+    )
+
+
+@torch.inference_mode()
+def gerar_tokens(
+    *,
     modelo: MiniLLM,
-    configuracao: ConfigModelo,
-    tokenizador: TokenizadorBytes,
-    prompt: str,
-    dispositivo: torch.device | str,
+    cfg: ConfigModelo,
+    tokenizador: TokenizadorBPE,
+    prompt_ids: list[int],
     quantidade_tokens: int,
     temperatura: float,
     top_k: int,
-) -> str:
-    """
-    Gera somente a continuação produzida pela QLE.
-    """
+    top_p: float,
+    penalidade_repeticao: float,
+    no_repeat_ngram: int,
+) -> tuple[list[int], bool]:
+    dispositivo = next(
+        modelo.parameters()
+    ).device
 
-    prompt_ids = tokenizador.codificar(
-        prompt,
-        adicionar_bos=True,
-    )
-
-    prompt_ids = limitar_prompt_ao_contexto(
-        prompt_ids,
-        configuracao,
-    )
-
-    entrada = torch.tensor(
+    sequencia = torch.tensor(
         [prompt_ids],
         dtype=torch.long,
         device=dispositivo,
     )
 
-    with torch.inference_mode():
-        saida = modelo.gerar(
-            entrada,
-            max_novos_tokens=quantidade_tokens,
-            temperatura=temperatura,
-            top_k=top_k,
+    gerados: list[int] = []
+    atingiu_eos = False
+
+    ids_proibidos = {
+        tokenizador.especiais.pad,
+        tokenizador.especiais.bos,
+        tokenizador.especiais.usuario,
+        tokenizador.especiais.assistente,
+        tokenizador.especiais.unk,
+    }
+
+    for _ in range(
+        quantidade_tokens
+    ):
+        entrada = sequencia[
+            :,
+            -cfg.comprimento_max:,
+        ]
+
+        logits, _ = modelo(
+            entrada
+        )
+        proximos_logits = (
+            logits[0, -1, :]
+            .float()
+            .clone()
         )
 
-    novos_ids = saida[
-        0,
-        len(prompt_ids):
-    ].tolist()
+        aplicar_penalidade_repeticao(
+            proximos_logits,
+            gerados,
+            penalidade_repeticao,
+        )
 
-    texto_gerado = tokenizador.decodificar(
-        novos_ids
-    )
+        bloqueados_ngram = (
+            tokens_bloqueados_por_ngram(
+                gerados,
+                no_repeat_ngram,
+            )
+        )
 
-    return limpar_resposta(texto_gerado)
+        for token_id in (
+            ids_proibidos
+            | bloqueados_ngram
+        ):
+            proximos_logits[
+                token_id
+            ] = float("-inf")
+
+        if not torch.isfinite(
+            proximos_logits
+        ).any():
+            proximo_id = (
+                tokenizador
+                .especiais
+                .eos
+            )
+        else:
+            proximo_id = amostrar_token(
+                logits=proximos_logits,
+                temperatura=temperatura,
+                top_k=top_k,
+                top_p=top_p,
+            )
+
+        if (
+            proximo_id
+            == tokenizador.especiais.eos
+        ):
+            atingiu_eos = True
+            break
+
+        gerados.append(
+            proximo_id
+        )
+
+        novo = torch.tensor(
+            [[proximo_id]],
+            dtype=torch.long,
+            device=dispositivo,
+        )
+
+        sequencia = torch.cat(
+            (sequencia, novo),
+            dim=1,
+        )
+
+    return gerados, atingiu_eos
 
 
-def iniciar_chat(
+def gerar_resposta(
+    *,
     modelo: MiniLLM,
-    configuracao: ConfigModelo,
-    tokenizador: TokenizadorBytes,
-    dispositivo: torch.device | str,
+    cfg: ConfigModelo,
+    tokenizador: TokenizadorBPE,
+    mensagem: str,
     quantidade_tokens: int,
     temperatura: float,
     top_k: int,
-) -> None:
-    """
-    Abre uma conversa interativa pelo terminal.
-    """
+    top_p: float,
+    penalidade_repeticao: float,
+    no_repeat_ngram: int,
+) -> tuple[str, bool, int]:
+    prompt_ids = construir_prompt_ids(
+        mensagem=mensagem,
+        tokenizador=tokenizador,
+        cfg=cfg,
+    )
 
-    print("=" * 55)
-    print("QLE iniciada")
-    print(f"Dispositivo: {dispositivo}")
-    print("Digite 'sair' para encerrar.")
-    print("=" * 55)
+    gerados, atingiu_eos = gerar_tokens(
+        modelo=modelo,
+        cfg=cfg,
+        tokenizador=tokenizador,
+        prompt_ids=prompt_ids,
+        quantidade_tokens=(
+            quantidade_tokens
+        ),
+        temperatura=temperatura,
+        top_k=top_k,
+        top_p=top_p,
+        penalidade_repeticao=(
+            penalidade_repeticao
+        ),
+        no_repeat_ngram=(
+            no_repeat_ngram
+        ),
+    )
 
-    while True:
-        try:
-            mensagem = input("\nVocê: ").strip()
-        except (EOFError, KeyboardInterrupt):
-            print("\nConversa encerrada.")
-            break
+    texto = tokenizador.decodificar(
+        gerados,
+        ignorar_especiais=True,
+    ).strip()
 
-        if mensagem.lower() in {
-            "sair",
-            "exit",
-            "quit",
-            "encerrar",
-        }:
-            print("Conversa encerrada.")
-            break
-
-        if not mensagem:
-            continue
-
-        prompt = construir_prompt(mensagem)
-
-        resposta = gerar_resposta(
-            modelo=modelo,
-            configuracao=configuracao,
-            tokenizador=tokenizador,
-            prompt=prompt,
-            dispositivo=dispositivo,
-            quantidade_tokens=quantidade_tokens,
-            temperatura=temperatura,
-            top_k=top_k,
+    if not texto:
+        texto = (
+            "[A QLE não gerou uma resposta textual.]"
         )
 
-        print(f"{NOME_IA}: {resposta}")
+    return (
+        texto,
+        atingiu_eos,
+        len(gerados),
+    )
+
+
+def validar_argumentos(
+    args: argparse.Namespace,
+) -> None:
+    if args.tokens <= 0:
+        raise ErroGeracao(
+            "--tokens precisa ser positivo."
+        )
+
+    if args.temperatura < 0:
+        raise ErroGeracao(
+            "--temperatura não pode ser negativa."
+        )
+
+    if args.top_k < 0:
+        raise ErroGeracao(
+            "--top-k não pode ser negativo."
+        )
+
+    if not 0 < args.top_p <= 1:
+        raise ErroGeracao(
+            "--top-p precisa estar entre 0 e 1."
+        )
+
+    if args.penalidade_repeticao < 1:
+        raise ErroGeracao(
+            "--penalidade-repeticao precisa ser pelo menos 1."
+        )
+
+    if args.no_repeat_ngram < 0:
+        raise ErroGeracao(
+            "--no-repeat-ngram não pode ser negativo."
+        )
+
+    if (
+        args.mensagem is not None
+        and args.prompt is not None
+    ):
+        raise ErroGeracao(
+            "Use apenas --mensagem ou --prompt."
+        )
 
 
 def criar_argumentos() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Executa e conversa com a IA QLE."
+        description=(
+            "Executa a QLE treinada com BPE."
+        )
     )
 
     parser.add_argument(
         "--checkpoint",
         type=Path,
         default=Path(
-            "checkpoints/qle_base_300_v2.pt"
+            "checkpoints/qle_bpe_melhor.pt"
         ),
-        help="Caminho do checkpoint treinado.",
+    )
+
+    parser.add_argument(
+        "--tokenizador",
+        type=Path,
+        default=None,
+        help=(
+            "Opcional. Quando omitido, o caminho é lido "
+            "dos metadados do checkpoint."
+        ),
     )
 
     parser.add_argument(
         "--mensagem",
         type=str,
         default=None,
-        help=(
-            "Mensagem comum. O programa adiciona automaticamente "
-            "os marcadores USUARIO e QLE."
-        ),
     )
 
     parser.add_argument(
@@ -337,119 +807,224 @@ def criar_argumentos() -> argparse.Namespace:
         type=str,
         default=None,
         help=(
-            "Prompt completo, usado para testes técnicos. "
-            "Exemplo: 'USUARIO: Ola.\\nQLE:'"
+            "Alias técnico de --mensagem. O formato especial "
+            "é adicionado automaticamente."
         ),
     )
 
     parser.add_argument(
         "--chat",
         action="store_true",
-        help="Abre o modo de conversa interativa.",
     )
 
     parser.add_argument(
         "--tokens",
         type=int,
         default=100,
-        help="Quantidade máxima de novos tokens.",
     )
 
     parser.add_argument(
         "--temperatura",
         type=float,
-        default=0.3,
-        help="Controla a aleatoriedade da geração.",
+        default=0.4,
+        help="Use 0 para geração gulosa.",
     )
 
     parser.add_argument(
         "--top-k",
         type=int,
-        default=10,
-        help="Quantidade de candidatos considerados por token.",
+        default=20,
+    )
+
+    parser.add_argument(
+        "--top-p",
+        type=float,
+        default=0.95,
+    )
+
+    parser.add_argument(
+        "--penalidade-repeticao",
+        type=float,
+        default=1.10,
+    )
+
+    parser.add_argument(
+        "--no-repeat-ngram",
+        type=int,
+        default=3,
     )
 
     parser.add_argument(
         "--seed",
         type=int,
         default=42,
-        help="Semente aleatória para repetir testes.",
+    )
+
+    parser.add_argument(
+        "--dispositivo",
+        choices=(
+            "auto",
+            "cpu",
+            "cuda",
+            "mps",
+        ),
+        default="auto",
+    )
+
+    parser.add_argument(
+        "--mostrar-metadados",
+        action="store_true",
     )
 
     return parser.parse_args()
 
 
-def validar_argumentos(args: argparse.Namespace) -> None:
-    if args.tokens <= 0:
-        raise ValueError(
-            "--tokens precisa ser maior que zero."
-        )
-
-    if args.temperatura <= 0:
-        raise ValueError(
-            "--temperatura precisa ser maior que zero."
-        )
-
-    if args.top_k <= 0:
-        raise ValueError(
-            "--top-k precisa ser maior que zero."
-        )
-
-    if args.mensagem is not None and args.prompt is not None:
-        raise ValueError(
-            "Use somente --mensagem ou --prompt, não ambos."
-        )
-
-
 def main() -> None:
     configurar_utf8()
-
     args = criar_argumentos()
     validar_argumentos(args)
 
+    random.seed(args.seed)
     torch.manual_seed(args.seed)
 
-    dispositivo = escolher_dispositivo()
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(
+            args.seed
+        )
 
-    modelo, configuracao = carregar_modelo(
-        caminho_checkpoint=args.checkpoint,
+    dispositivo = escolher_dispositivo(
+        args.dispositivo
+    )
+
+    (
+        modelo,
+        cfg,
+        tokenizador,
+        checkpoint,
+        tokenizador_path,
+    ) = carregar_modelo_e_tokenizador(
+        caminho_checkpoint=(
+            args.checkpoint
+        ),
+        caminho_tokenizador=(
+            args.tokenizador
+        ),
         dispositivo=dispositivo,
     )
 
-    tokenizador = TokenizadorBytes()
+    if args.mostrar_metadados:
+        print("=" * 64)
+        print("QLE — METADADOS")
+        print("=" * 64)
+        print(
+            f"Checkpoint: "
+            f"{args.checkpoint.resolve()}"
+        )
+        print(
+            f"Tokenizador: "
+            f"{tokenizador_path.resolve()}"
+        )
+        print(
+            f"Dispositivo: {dispositivo}"
+        )
+        print(
+            f"Passo: "
+            f"{checkpoint.get('passo_atual', '?')}"
+        )
+        print(
+            f"Parâmetros: "
+            f"{modelo.contar_parametros():,}"
+        )
+        print(
+            f"Vocabulário: "
+            f"{tokenizador.tamanho_vocab:,}"
+        )
+        print("=" * 64)
 
-    if args.chat:
-        iniciar_chat(
+    def responder(
+        mensagem: str,
+    ) -> None:
+        texto, eos, tokens = gerar_resposta(
             modelo=modelo,
-            configuracao=configuracao,
+            cfg=cfg,
             tokenizador=tokenizador,
-            dispositivo=dispositivo,
+            mensagem=mensagem,
             quantidade_tokens=args.tokens,
             temperatura=args.temperatura,
             top_k=args.top_k,
+            top_p=args.top_p,
+            penalidade_repeticao=(
+                args.penalidade_repeticao
+            ),
+            no_repeat_ngram=(
+                args.no_repeat_ngram
+            ),
         )
+
+        print(f"{NOME_IA}: {texto}")
+
+        if args.mostrar_metadados:
+            print(
+                f"[tokens={tokens} | eos={eos}]"
+            )
+
+    if args.chat:
+        print("=" * 64)
+        print("QLE iniciada")
+        print(f"Dispositivo: {dispositivo}")
+        print("Digite 'sair' para encerrar.")
+        print("=" * 64)
+
+        while True:
+            try:
+                mensagem = input(
+                    "\nVocê: "
+                ).strip()
+            except (
+                EOFError,
+                KeyboardInterrupt,
+            ):
+                print(
+                    "\nConversa encerrada."
+                )
+                break
+
+            if mensagem.lower() in {
+                "sair",
+                "exit",
+                "quit",
+                "encerrar",
+            }:
+                print(
+                    "Conversa encerrada."
+                )
+                break
+
+            if not mensagem:
+                continue
+
+            responder(mensagem)
 
         return
 
-    if args.prompt is not None:
-        prompt = args.prompt
-    else:
-        mensagem = args.mensagem or "Olá."
-        prompt = construir_prompt(mensagem)
-
-    resposta = gerar_resposta(
-        modelo=modelo,
-        configuracao=configuracao,
-        tokenizador=tokenizador,
-        prompt=prompt,
-        dispositivo=dispositivo,
-        quantidade_tokens=args.tokens,
-        temperatura=args.temperatura,
-        top_k=args.top_k,
+    mensagem = (
+        args.mensagem
+        if args.mensagem is not None
+        else args.prompt
     )
 
-    print(f"{NOME_IA}: {resposta}")
+    if mensagem is None:
+        mensagem = "Olá."
+
+    responder(mensagem)
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except ErroGeracao as erro:
+        print(
+            f"ERRO: {erro}",
+            file=sys.stderr,
+        )
+        raise SystemExit(1) from None
