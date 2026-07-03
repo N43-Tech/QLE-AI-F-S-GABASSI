@@ -1,0 +1,24 @@
+{"id":"matematica-0031","categoria":"matematica","pergunta":"O que é logaritmo?","resposta":"Logaritmo é o expoente ao qual a base deve ser elevada para obter o logaritmando. log_b(x) = y significa b^y = x."}
+{"id":"engenharia-0019","categoria":"engenharia","pergunta":"O que é perda de carga?","resposta":"Perda de carga é a perda de pressão em um fluido devido ao atrito com as paredes do tubo."}
+{"id":"programacao-0033","categoria":"programacao","pergunta":"Como ler um arquivo em Python?","resposta":"Use open: with open('arquivo.txt', 'r') as f: conteudo = f.read()."}
+{"id":"identidade-0012","categoria":"identidade","pergunta":"Você é o Claude?","resposta":"Não. Sou a QLE."}
+{"id":"machinelearning-0010","categoria":"machinelearning","pergunta":"Como evitar overfitting?","resposta":"Use mais dados, regularização (L1/L2), dropout, early stopping e validação cruzada."}
+{"id":"incerteza-0011","categoria":"limites","pergunta":"Qual é o sentido da vida?","resposta":"Essa é uma pergunta filosófica sem resposta definitiva. Como QLE, processo lógica e dados, não opiniões filosóficas."}
+{"id":"machinelearning-0003","categoria":"machinelearning","pergunta":"O que é aprendizado supervisionado?","resposta":"Aprendizado supervisionado usa dados rotulados para treinar um modelo a prever resultados. Exemplo: classificar e-mails."}
+{"id":"matematica-0057","categoria":"matematica","pergunta":"O que é média aritmética?","resposta":"Média aritmética é a soma dos valores dividida pela quantidade de valores."}
+{"id":"matematica-0051","categoria":"matematica","pergunta":"Qual é o determinante de uma matriz 2x2 [[a,b],[c,d]]?","resposta":"O determinante é ad - bc."}
+{"id":"quimica-0002","categoria":"quimica","pergunta":"O que é um átomo?","resposta":"Átomo é a menor unidade de um elemento que mantém suas propriedades, formado por prótons, nêutrons e elétrons."}
+{"id":"automacao-0034","categoria":"automacao","pergunta":"O que é ladder?","resposta":"Ladder é uma linguagem de programação visual para CLPs que se parece com diagramas de relés."}
+{"id":"matematica-0022","categoria":"matematica","pergunta":"Se 3 operários fazem um trabalho em 12 horas, quanto tempo levarão 6 operários?","resposta":"Inversamente proporcional: 3 x 12 = 6 x x, então x = 36/6 = 6 horas."}
+{"id":"automacao-0041","categoria":"automacao","pergunta":"O que é overshoot em controle?","resposta":"Overshoot é o valor máximo que a variável ultrapassa o setpoint antes de estabilizar."}
+{"id":"portugues-0004","categoria":"portugues","pergunta":"Qual é a diferença entre a e há?","resposta":"A indica tempo futuro ou distância. Há indica tempo passado. Exemplo: Daqui a dois dias / Há dois dias atrás."}
+{"id":"portugues-0029","categoria":"portugues","pergunta":"Qual é o feminino de embaixador?","resposta":"O feminino pode ser embaixadora ou embaixatriz, dependendo do contexto."}
+{"id":"fisica-0005","categoria":"fisica","pergunta":"Qual é a fórmula de aceleração?","resposta":"Aceleração = variação de velocidade / tempo. a = Δv/Δt."}
+{"id":"engenharia-0004","categoria":"engenharia","pergunta":"O que é módulo de Young?","resposta":"Módulo de Young (E) mede a rigidez de um material. Quanto maior, mais rígido."}
+{"id":"automacao-0038","categoria":"automacao","pergunta":"O que faz a ação proporcional do PID?","resposta":"A ação proporcional gera uma saída proporcional ao erro entre o setpoint e a variável de processo."}
+{"id":"identidade-0024","categoria":"identidade","pergunta":"Qual é o significado da letra E no seu nome?","resposta":"A letra E significa Engine."}
+{"id":"programacao-0021","categoria":"programacao","pergunta":"Como tratar exceções em Python?","resposta":"Use try-except: try: ... except Exception as e: ..."}
+{"id":"programacao-0044","categoria":"programacao","pergunta":"O que é Matplotlib?","resposta":"Matplotlib é uma biblioteca Python para criação de gráficos e visualizações."}
+{"id":"estatistica-0006","categoria":"estatistica","pergunta":"O que é distribuição normal?","resposta":"Distribuição normal é uma distribuição simétrica em forma de sino, definida por média e desvio padrão."}
+{"id":"eletronica-0010","categoria":"eletronica","pergunta":"O que é um amplificador operacional?","resposta":"Amplificador operacional é um circuito integrado que amplifica a diferença de tensão entre suas entradas."}
+{"id":"programacao-0009","categoria":"programacao","pergunta":"Como percorrer um dicionário em Python?","resposta":"Use um loop for: for chave, valor in dicionario.items()."}

@@ -1,0 +1,17 @@
+{
+  "arquivo": "tokenizer\\qle_bpe_2000.json",
+  "tipo": "BPE ByteLevel",
+  "vocab_solicitado": 2000,
+  "vocab_real": 2000,
+  "min_frequency": 2,
+  "tokens_especiais": {
+    "<PAD>": 0,
+    "<BOS>": 1,
+    "<EOS>": 2,
+    "<UNK>": 3,
+    "<USER>": 4,
+    "<ASSISTANT>": 5
+  },
+  "amostras_avaliadas": 100,
+  "caracteres_por_token_media": 3.3211071916189487
+}

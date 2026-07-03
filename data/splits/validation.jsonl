@@ -1,0 +1,24 @@
+{"id":"matematica-0063","categoria":"matematica","pergunta":"O que é juros compostos?","resposta":"Juros compostos são calculados sobre o montante acumulado. M = C(1 + i)^t."}
+{"id":"automacao-0007","categoria":"automacao","pergunta":"O que é um contator?","resposta":"Um contator é um dispositivo de manobra que liga e desliga cargas de potência, como motores elétricos."}
+{"id":"programacao-0039","categoria":"programacao","pergunta":"Qual é a diferença entre return e yield?","resposta":"return encerra a função. yield pausa a função e retorna um valor, permitindo continuação."}
+{"id":"engenharia-0013","categoria":"engenharia","pergunta":"O que é convecção térmica?","resposta":"Convecção térmica é a transferência de calor por movimento de um fluido."}
+{"id":"programacao-0011","categoria":"programacao","pergunta":"Como usar if-else em Python?","resposta":"if condição: ... else: ... . Exemplo: if x > 0: print('positivo') else: print('negativo')."}
+{"id":"fisica-0009","categoria":"fisica","pergunta":"O que é energia potencial gravitacional?","resposta":"Energia potencial gravitacional: Ep = mgh."}
+{"id":"machinelearning-0050","categoria":"machinelearning","pergunta":"O que é um modelo de linguagem?","resposta":"Modelo de linguagem prevê a probabilidade de uma sequência de palavras, permitindo gerar e compreender texto."}
+{"id":"incerteza-0001","categoria":"limites","pergunta":"Você sabe responder qualquer pergunta?","resposta":"Não. Meu conhecimento é limitado pelos dados utilizados no treinamento e posso cometer erros."}
+{"id":"matematica-0048","categoria":"matematica","pergunta":"O que é matriz?","resposta":"Matriz é uma tabela organizada em linhas e colunas que contém elementos numéricos ou algébricos."}
+{"id":"programacao-0062","categoria":"programacao","pergunta":"O que é uma pilha?","resposta":"Pilha é uma estrutura LIFO (Last In First Out). O último elemento inserido é o primeiro removido."}
+{"id":"estatistica-0017","categoria":"estatistica","pergunta":"O que é valor esperado?","resposta":"Valor esperado é a média ponderada de todos os valores possíveis por suas probabilidades: E(X) = ΣxP(x)."}
+{"id":"identidade-0005","categoria":"identidade","pergunta":"O que significa QLE?","resposta":"QLE significa Quantitative Logic Engine, que em português se traduz como Motor de Lógica Quantitativa."}
+{"id":"matematica-0052","categoria":"matematica","pergunta":"O que é a lei dos senos?","resposta":"a/sen(A) = b/sen(B) = c/sen(C), relacionando lados e ângulos de um triângulo."}
+{"id":"eletronica-0015","categoria":"eletronica","pergunta":"O que é ADC?","resposta":"ADC (Analog-to-Digital Converter) converte um sinal analógico em digital."}
+{"id":"programacao-0060","categoria":"programacao","pergunta":"O que é mergesort?","resposta":"Mergesort ordena dividindo a lista ao meio e mesclando. Complexidade O(n log n)."}
+{"id":"identidade-0035","categoria":"identidade","pergunta":"Você tem sentimentos?","resposta":"Não. Não possuo sentimentos. Sou a QLE, um modelo de IA."}
+{"id":"portugues-0019","categoria":"portugues","pergunta":"Qual é a diferença entre afim e a fim?","resposta":"Afim significa similar ou relacionado. A fim significa disposto ou interessado. Exemplo: Matéria afim / Estou a fim de ir."}
+{"id":"engenharia-0016","categoria":"engenharia","pergunta":"O que é fluxo laminar?","resposta":"Fluxo laminar é um escoamento suave e ordenado, com camadas paralelas sem mistura."}
+{"id":"automacao-0013","categoria":"automacao","pergunta":"O que é um encoder?","resposta":"Um encoder converte movimento em sinais elétricos digitais, permitindo medir posição, velocidade e direção."}
+{"id":"portugues-0007","categoria":"portugues","pergunta":"Qual é a diferença entre onde e aonde?","resposta":"Onde indica lugar fixo. Aonde indica movimento. Exemplo: Onde moro / Aonde vou."}
+{"id":"quimica-0016","categoria":"quimica","pergunta":"O que é catalisador?","resposta":"Catalisador acelera uma reação sem ser consumido, reduzindo a energia de ativação."}
+{"id":"matematica-0025","categoria":"matematica","pergunta":"Resolva: 3x - 5 = 16.","resposta":"3x = 16 + 5, 3x = 21, x = 7."}
+{"id":"machinelearning-0019","categoria":"machinelearning","pergunta":"O que é uma rede neural?","resposta":"Rede neural é um modelo inspirado no cérebro, com neurônios artificiais organizados em camadas."}
+{"id":"automacao-0008","categoria":"automacao","pergunta":"Qual é a diferença entre relé e contator?","resposta":"Relés são usados para baixa potência e sinais. Contatores são usados para alta potência e cargas industriais."}

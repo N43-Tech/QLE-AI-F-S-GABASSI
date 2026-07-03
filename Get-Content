@@ -1,0 +1,30 @@
+@'
+from pathlib import Path
+
+base_path = Path("data/corpus.txt")
+identidade_path = Path("data/identidade_QLE.txt")
+saida_path = Path("data/corpus_QLE.txt")
+
+base = base_path.read_text(encoding="utf-8-sig")
+identidade = identidade_path.read_text(encoding="utf-8-sig")
+
+texto = base.rstrip() + "\n\n" + identidade.strip() + "\n"
+
+# Padronizar o nome.
+texto = texto.replace("Tess", "qLE")
+texto = texto.replace("QLE", "qLE")
+texto = texto.replace("qle", "qLE")
+
+# Padronizar o marcador do usuário usando somente ASCII.
+texto = texto.replace("Usuário:", "USUARIO:")
+texto = texto.replace("Usuario:", "USUARIO:")
+
+saida_path.write_text(texto, encoding="utf-8")
+
+print("Corpus reconstruido.")
+print("Arquivo:", saida_path)
+print("Caracteres:", len(texto))
+print("Ocorrencias qLE:", texto.count("qLE"))
+print("Ocorrencias QLE:", texto.count("QLE"))
+print("Ocorrencias Tess:", texto.count("Tess"))
+'@ | python -

@@ -1,0 +1,121 @@
+{
+  "status": "concluido",
+  "gerado_em_utc": "2026-07-03T15:44:30+00:00",
+  "entrada": {
+    "caminho": "C:\\Users\\Fabio Gabassi\\Downloads\\Quantu\\Quantu\\data\\raw\\qle_dataset.jsonl",
+    "formato": "jsonl",
+    "tamanho_bytes": 91020,
+    "sha256": "c97cde678d9b0ee9d53af220356476466d56453c7d77facdc03eeedd50dcefb5"
+  },
+  "configuracao": {
+    "seed": 42,
+    "nome_ia": "QLE",
+    "fracao_validacao": 0.05,
+    "fracao_teste": 0.05,
+    "modo_estrito": false,
+    "categorias_permitidas": null
+  },
+  "contagens": {
+    "brutos": 478,
+    "validos": 478,
+    "invalidos_ou_duplicados": 0
+  },
+  "categorias": {
+    "total": {
+      "automacao": 52,
+      "eletronica": 25,
+      "engenharia": 35,
+      "estatistica": 19,
+      "fisica": 25,
+      "identidade": 40,
+      "limites": 22,
+      "machinelearning": 50,
+      "matematica": 75,
+      "portugues": 35,
+      "programacao": 80,
+      "quimica": 20
+    },
+    "percentual_total": {
+      "automacao": 10.8787,
+      "eletronica": 5.2301,
+      "engenharia": 7.3222,
+      "estatistica": 3.9749,
+      "fisica": 5.2301,
+      "identidade": 8.3682,
+      "limites": 4.6025,
+      "machinelearning": 10.4603,
+      "matematica": 15.6904,
+      "portugues": 7.3222,
+      "programacao": 16.7364,
+      "quimica": 4.1841
+    }
+  },
+  "comparacao_com_metas": null,
+  "avisos": [
+    "4 pergunta(s) possuem respostas diferentes. Essas variantes serão mantidas no mesmo split para evitar vazamento entre treino, validação e teste."
+  ],
+  "problemas": [],
+  "splits": {
+    "train": {
+      "quantidade": 430,
+      "categorias": {
+        "automacao": 46,
+        "eletronica": 23,
+        "engenharia": 31,
+        "estatistica": 17,
+        "fisica": 23,
+        "identidade": 36,
+        "limites": 20,
+        "machinelearning": 46,
+        "matematica": 67,
+        "portugues": 31,
+        "programacao": 72,
+        "quimica": 18
+      },
+      "sha256": "91447159f28c7cbb775f56cdf09a773da49ab1a700bf05b501514b757c9ca2c7"
+    },
+    "validation": {
+      "quantidade": 24,
+      "categorias": {
+        "automacao": 3,
+        "eletronica": 1,
+        "engenharia": 2,
+        "estatistica": 1,
+        "fisica": 1,
+        "identidade": 2,
+        "limites": 1,
+        "machinelearning": 2,
+        "matematica": 4,
+        "portugues": 2,
+        "programacao": 4,
+        "quimica": 1
+      },
+      "sha256": "ae9b48db5b8690e90d108b482a7ded8d16820834f7163c8459b10ccc43b33496"
+    },
+    "test": {
+      "quantidade": 24,
+      "categorias": {
+        "automacao": 3,
+        "eletronica": 1,
+        "engenharia": 2,
+        "estatistica": 1,
+        "fisica": 1,
+        "identidade": 2,
+        "limites": 1,
+        "machinelearning": 2,
+        "matematica": 4,
+        "portugues": 2,
+        "programacao": 4,
+        "quimica": 1
+      },
+      "sha256": "c2007783aa35afb46687bc2615aad0678e8426094cd4861f2e7aba4e8acc7a50"
+    }
+  },
+  "saidas": {
+    "processado": "C:\\Users\\Fabio Gabassi\\Downloads\\Quantu\\Quantu\\data\\processed\\qle_limpo.jsonl",
+    "treino": "C:\\Users\\Fabio Gabassi\\Downloads\\Quantu\\Quantu\\data\\splits\\train.jsonl",
+    "validacao": "C:\\Users\\Fabio Gabassi\\Downloads\\Quantu\\Quantu\\data\\splits\\validation.jsonl",
+    "teste": "C:\\Users\\Fabio Gabassi\\Downloads\\Quantu\\Quantu\\data\\splits\\test.jsonl",
+    "resumo_csv": "C:\\Users\\Fabio Gabassi\\Downloads\\Quantu\\Quantu\\data\\processed\\resumo_categorias.csv"
+  }
+}

@@ -1,0 +1,7 @@
+torch
+numpy
+tokenizers
+transformers
+fastapi
+uvicorn
+httpx

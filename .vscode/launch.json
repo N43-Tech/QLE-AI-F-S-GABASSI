@@ -1,0 +1,28 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "1 - Verificar ambiente",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "src.check_environment",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "2 - Treinar mini LLM",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "src.train",
+      "args": ["--config", "config_tiny.json"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "3 - Gerar texto",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "src.generate",
+      "args": ["--prompt", "A inteligência artificial", "--tokens", "120"],
+      "console": "integratedTerminal"
+    }
+  ]
+}

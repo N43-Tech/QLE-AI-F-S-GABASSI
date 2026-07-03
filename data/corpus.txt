@@ -1,0 +1,20 @@
+A inteligência artificial aprende padrões estatísticos presentes em dados.
+Um modelo de linguagem recebe uma sequência de tokens e tenta prever o próximo token.
+Durante o treinamento, os parâmetros são ajustados para reduzir a entropia cruzada.
+A atenção permite que cada posição utilize informações das posições anteriores.
+RMSNorm estabiliza as ativações, SwiGLU aumenta a capacidade da rede e RoPE representa posições.
+Este corpus é apenas uma demonstração técnica. Um modelo útil exige muito mais texto, diversidade e limpeza.
+Automação industrial integra sensores, controladores, atuadores, redes e sistemas supervisórios.
+Um sensor mede uma variável do processo. Um controlador compara a medição com o valor desejado.
+O atuador modifica o processo para reduzir o erro. A segurança deve ser considerada em todas as etapas.
+Python e PyTorch permitem implementar redes neurais, executar diferenciação automática e treinar modelos.
+A inteligência artificial aprende padrões estatísticos presentes em dados.
+Um modelo de linguagem recebe uma sequência de tokens e tenta prever o próximo token.
+Durante o treinamento, os parâmetros são ajustados para reduzir a entropia cruzada.
+A atenção permite que cada posição utilize informações das posições anteriores.
+RMSNorm estabiliza as ativações, SwiGLU aumenta a capacidade da rede e RoPE representa posições.
+Este corpus é apenas uma demonstração técnica. Um modelo útil exige muito mais texto, diversidade e limpeza.
+Automação industrial integra sensores, controladores, atuadores, redes e sistemas supervisórios.
+Um sensor mede uma variável do processo. Um controlador compara a medição com o valor desejado.
+O atuador modifica o processo para reduzir o erro. A segurança deve ser considerada em todas as etapas.
+Python e PyTorch permitem implementar redes neurais, executar diferenciação automática e treinar modelos.

@@ -1,0 +1,13 @@
+categoria,total,train,validation,test
+automacao,52,46,3,3
+eletronica,25,23,1,1
+engenharia,35,31,2,2
+estatistica,19,17,1,1
+fisica,25,23,1,1
+identidade,40,36,2,2
+limites,22,20,1,1
+machinelearning,50,46,2,2
+matematica,75,67,4,4
+portugues,35,31,2,2
+programacao,80,72,4,4
+quimica,20,18,1,1

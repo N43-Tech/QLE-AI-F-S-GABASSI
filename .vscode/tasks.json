@@ -1,0 +1,17 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Criar ambiente e instalar dependências",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File scripts/setup_windows.ps1",
+      "problemMatcher": []
+    },
+    {
+      "label": "Treinar 10 passos (teste rápido)",
+      "type": "shell",
+      "command": ".venv\\Scripts\\python.exe -m src.train --passos 10",
+      "problemMatcher": []
+    }
+  ]
+}

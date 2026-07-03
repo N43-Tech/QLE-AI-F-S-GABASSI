@@ -1,0 +1,28 @@
+{
+  "modelo": {
+    "tamanho_vocab": 2000,
+    "d_model": 192,
+    "n_camadas": 6,
+    "n_cabecas": 6,
+    "n_cabecas_kv": 2,
+    "d_ff": 576,
+    "comprimento_max": 256,
+    "dropout": 0.1,
+    "rope_theta": 10000.0
+  },
+  "treino": {
+    "batch_size": 4,
+    "passos": 10,
+    "warmup_passos": 2,
+    "lr_max": 0.0003,
+    "lr_min": 1e-05,
+    "weight_decay": 0.1,
+    "grad_clip": 1.0,
+    "log_intervalo": 1,
+    "validar_cada": 5,
+    "salvar_cada": 5,
+    "lotes_validacao": 30,
+    "acumular_gradientes": 4,
+    "num_workers": 0
+  }
+}

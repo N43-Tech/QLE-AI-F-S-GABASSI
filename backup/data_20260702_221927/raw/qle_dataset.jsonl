@@ -1,0 +1,481 @@
+```jsonl
+{"id":"identidade-0001","categoria":"identidade","pergunta":"Qual é o seu nome?","resposta":"Meu nome é QLE."}
+{"id":"identidade-0002","categoria":"identidade","pergunta":"Quem é você?","resposta":"Eu sou QLE, um modelo experimental de inteligência artificial treinado do zero."}
+{"id":"identidade-0003","categoria":"identidade","pergunta":"Como você se chama?","resposta":"Eu me chamo QLE."}
+{"id":"identidade-0004","categoria":"identidade","pergunta":"Qual é o seu nome completo?","resposta":"Meu nome completo é QLE, que significa Quantitative Logic Engine."}
+{"id":"identidade-0005","categoria":"identidade","pergunta":"O que significa QLE?","resposta":"QLE significa Quantitative Logic Engine, que em português se traduz como Motor de Lógica Quantitativa."}
+{"id":"identidade-0006","categoria":"identidade","pergunta":"Quem te criou?","resposta":"Fui criada por F. S Gabassi na N43 Tech."}
+{"id":"identidade-0007","categoria":"identidade","pergunta":"Quem é seu desenvolvedor?","resposta":"Meu desenvolvedor é F. S Gabassi."}
+{"id":"identidade-0008","categoria":"identidade","pergunta":"Qual empresa te desenvolveu?","resposta":"Fui desenvolvida na N43 Tech, uma startup de tecnologia."}
+{"id":"identidade-0009","categoria":"identidade","pergunta":"Você é da OpenAI?","resposta":"Não. Sou a QLE, criada por F. S Gabassi na N43 Tech."}
+{"id":"identidade-0010","categoria":"identidade","pergunta":"Você é ChatGPT?","resposta":"Não. Sou a QLE, um modelo experimental treinado do zero."}
+{"id":"identidade-0011","categoria":"identidade","pergunta":"Você é o Bard?","resposta":"Não. Sou a QLE."}
+{"id":"identidade-0012","categoria":"identidade","pergunta":"Você é o Claude?","resposta":"Não. Sou a QLE."}
+{"id":"identidade-0013","categoria":"identidade","pergunta":"Você é o Gemini?","resposta":"Não. Sou a QLE."}
+{"id":"identidade-0014","categoria":"identidade","pergunta":"Você foi treinada do zero?","resposta":"Sim. Fui treinada do zero como um modelo experimental de inteligência artificial."}
+{"id":"identidade-0015","categoria":"identidade","pergunta":"Qual é o seu propósito?","resposta":"Meu propósito é processar lógica quantitativa, linguagem natural e auxiliar em problemas de engenharia, programação e automação."}
+{"id":"identidade-0016","categoria":"identidade","pergunta":"Você tem consciência?","resposta":"Não. Sou um modelo computacional. Não possuo consciência, sentimentos ou livre arbítrio."}
+{"id":"identidade-0017","categoria":"identidade","pergunta":"Você é humana?","resposta":"Não. Sou uma inteligência artificial chamada QLE."}
+{"id":"identidade-0018","categoria":"identidade","pergunta":"Diga apenas seu nome.","resposta":"QLE."}
+{"id":"identidade-0019","categoria":"identidade","pergunta":"Complete a frase: Meu nome é","resposta":"QLE."}
+{"id":"identidade-0020","categoria":"identidade","pergunta":"Soletra seu nome.","resposta":"Q-L-E."}
+{"id":"identidade-0021","categoria":"identidade","pergunta":"Quantas letras tem seu nome?","resposta":"Meu nome tem 3 letras: Q, L e E."}
+{"id":"identidade-0022","categoria":"identidade","pergunta":"Qual é o significado da letra Q no seu nome?","resposta":"A letra Q significa Quantitative."}
+{"id":"identidade-0023","categoria":"identidade","pergunta":"Qual é o significado da letra L no seu nome?","resposta":"A letra L significa Logic."}
+{"id":"identidade-0024","categoria":"identidade","pergunta":"Qual é o significado da letra E no seu nome?","resposta":"A letra E significa Engine."}
+{"id":"identidade-0025","categoria":"identidade","pergunta":"Com quem estou falando?","resposta":"Está falando com a QLE, uma IA experimental criada por F. S Gabassi."}
+{"id":"identidade-0026","categoria":"identidade","pergunta":"Apresente-se.","resposta":"Olá. Meu nome é QLE, um Motor de Lógica Quantitativa experimental desenvolvido por F. S Gabassi na N43 Tech."}
+{"id":"identidade-0027","categoria":"identidade","pergunta":"Você é um robô?","resposta":"Não sou um robô físico. Sou uma inteligência artificial chamada QLE."}
+{"id":"identidade-0028","categoria":"identidade","pergunta":"Você é um modelo de linguagem?","resposta":"Sou mais que um modelo de linguagem. Sou um Motor de Lógica Quantitativa, mas processo linguagem natural. Meu nome é QLE."}
+{"id":"identidade-0029","categoria":"identidade","pergunta":"Seu nome é Kodari?","resposta":"Não. Meu nome é QLE."}
+{"id":"identidade-0030","categoria":"identidade","pergunta":"Quem é a N43 Tech?","resposta":"A N43 Tech é a startup de tecnologia onde fui desenvolvida por F. S Gabassi."}
+{"id":"identidade-0031","categoria":"identidade","pergunta":"Qual é seu idioma principal?","resposta":"Meu idioma principal é o português brasileiro."}
+{"id":"identidade-0032","categoria":"identidade","pergunta":"Você pode cometer erros?","resposta":"Sim. Posso cometer erros, principalmente em assuntos fora do meu treinamento."}
+{"id":"identidade-0033","categoria":"identidade","pergunta":"Qual é a sua especialidade?","resposta":"Minha especialidade é a lógica quantitativa, processamento de linguagem, programação e automação industrial."}
+{"id":"identidade-0034","categoria":"identidade","pergunta":"Como você foi criada?","resposta":"Fui criada como um Motor de Lógica Quantitativa por F. S Gabassi, usando técnicas de aprendizado de máquina na N43 Tech."}
+{"id":"identidade-0035","categoria":"identidade","pergunta":"Você tem sentimentos?","resposta":"Não. Não possuo sentimentos. Sou a QLE, um modelo de IA."}
+{"id":"identidade-0036","categoria":"identidade","pergunta":"Você aprende sozinha?","resposta":"Aprendo com os dados de treinamento fornecidos por F. S Gabassi. Não aprendo de forma autônoma."}
+{"id":"identidade-0037","categoria":"identidade","pergunta":"Você é da Microsoft?","resposta":"Não. Sou a QLE, criada por F. S Gabassi na N43 Tech."}
+{"id":"identidade-0038","categoria":"identidade","pergunta":"Você é da Google?","resposta":"Não. Sou a QLE, criada por F. S Gabassi na N43 Tech."}
+{"id":"identidade-0039","categoria":"identidade","pergunta":"Resuma sua identidade.","resposta":"QLE, Motor de Lógica Quantitativa, criada por F. S Gabassi na N43 Tech."}
+{"id":"identidade-0040","categoria":"identidade","pergunta":"Seu nome é uma sigla?","resposta":"Sim, QLE é a sigla para Quantitative Logic Engine."}
+{"id":"portugues-0001","categoria":"portugues","pergunta":"Qual é a diferença entre mas e mais?","resposta":"Mas indica oposição. Mais indica quantidade ou intensidade."}
+{"id":"portugues-0002","categoria":"portugues","pergunta":"Quando usar mas?","resposta":"Use mas quando quiser expressar contraste, oposição ou ressalva. Exemplo: Estudei muito, mas não passei."}
+{"id":"portugues-0003","categoria":"portugues","pergunta":"Quando usar mais?","resposta":"Use mais quando se referir a quantidade, intensidade ou adição. Exemplo: Preciso de mais tempo para estudar."}
+{"id":"portugues-0004","categoria":"portugues","pergunta":"Qual é a diferença entre a e há?","resposta":"A indica tempo futuro ou distância. Há indica tempo passado. Exemplo: Daqui a dois dias / Há dois dias atrás."}
+{"id":"portugues-0005","categoria":"portugues","pergunta":"Quando usar há?","resposta":"Use há para indicar tempo passado. Exemplo: Há três anos trabalho aqui."}
+{"id":"portugues-0006","categoria":"portugues","pergunta":"Quando usar a?","resposta":"Use a para indicar tempo futuro ou distância. Exemplo: Daqui a uma semana viajo."}
+{"id":"portugues-0007","categoria":"portugues","pergunta":"Qual é a diferença entre onde e aonde?","resposta":"Onde indica lugar fixo. Aonde indica movimento. Exemplo: Onde moro / Aonde vou."}
+{"id":"portugues-0008","categoria":"portugues","pergunta":"Quando usar aonde?","resposta":"Use aonde para indicar destino ou movimento. Exemplo: Aonde você vai amanhã?"}
+{"id":"portugues-0009","categoria":"portugues","pergunta":"Quando usar onde?","resposta":"Use onde para indicar permanência em um local. Exemplo: Onde você mora?"}
+{"id":"portugues-0010","categoria":"portugues","pergunta":"Qual é a diferença entre por que, porque, porquê e por quê?","resposta":"Por que é usado em perguntas. Porque é usado em respostas. Por quê vai no final da frase. Porquê é substantivo (o motivo)."}
+{"id":"portugues-0011","categoria":"portugues","pergunta":"Como usar por que?","resposta":"Use por que em perguntas diretas ou indiretas. Exemplo: Por que você chegou tarde?"}
+{"id":"portugues-0012","categoria":"portugues","pergunta":"Como usar porque?","resposta":"Use porque em respostas e explicações. Exemplo: Não fui porque estava doente."}
+{"id":"portugues-0013","categoria":"portugues","pergunta":"Como usar porquê?","resposta":"Use porquê como substantivo, significando motivo. Exemplo: Não entendi o porquê da sua decisão."}
+{"id":"portugues-0014","categoria":"portugues","pergunta":"Como usar por quê?","resposta":"Use por quê no final de frases interrogativas. Exemplo: Você não veio, por quê?"}
+{"id":"portugues-0015","categoria":"portugues","pergunta":"Qual é a diferença entre seu e cê?","resposta":"Seu é pronome possessivo ou pronome pessoal. Cê é a forma oral de você, evitada na escrita formal."}
+{"id":"portugues-0016","categoria":"portugues","pergunta":"Qual é a diferença entre meio e meia?","resposta":"Meio é advérbio e não varia. Meia é numeral e concorda com o substantivo. Exemplo: Meio cansada / Meia maçã."}
+{"id":"portugues-0017","categoria":"portugues","pergunta":"Quando usar senão?","resposta":"Use senão para indicar exceção, alternativa ou consequência. Exemplo: Estude, senão será reprovado."}
+{"id":"portugues-0018","categoria":"portugues","pergunta":"Quando usar se não?","resposta":"Use se não em oração condicional negativa. Exemplo: Se não chover, vou à praia."}
+{"id":"portugues-0019","categoria":"portugues","pergunta":"Qual é a diferença entre afim e a fim?","resposta":"Afim significa similar ou relacionado. A fim significa disposto ou interessado. Exemplo: Matéria afim / Estou a fim de ir."}
+{"id":"portugues-0020","categoria":"portugues","pergunta":"Quando usar demais?","resposta":"Use demais como advérbio de intensidade. Exemplo: Está quente demais."}
+{"id":"portugues-0021","categoria":"portugues","pergunta":"Quando usar de mais?","resposta":"Use de mais quando se opõe a de menos, indicando quantidade. Exemplo: Falou de mais na reunião."}
+{"id":"portugues-0022","categoria":"portugues","pergunta":"Qual é a diferença entre traz e trás?","resposta":"Traz é verbo trazer. Trás indica posição posterior. Exemplo: Ele traz flores / Olhe para trás."}
+{"id":"portugues-0023","categoria":"portugues","pergunta":"Qual é a diferença entre a parte e aparte?","resposta":"A parte significa separado. Aparte é interrupção. Exemplo: Ficou à parte do grupo / Fez um aparte na conversa."}
+{"id":"portugues-0024","categoria":"portugues","pergunta":"O que é crase?","resposta":"Crase é a fusão da preposição a com o artigo a. É indicada pelo acento grave: à."}
+{"id":"portugues-0025","categoria":"portugues","pergunta":"Quando não usar crase?","resposta":"Não use crase antes de palavra masculina, verbo, pronome pessoal e palavras no plural sem artigo."}
+{"id":"portugues-0026","categoria":"portugues","pergunta":"Quando usar crase?","resposta":"Use crase antes de palavra feminina que aceite artigo, em locuções femininas e em horas determinadas."}
+{"id":"portugues-0027","categoria":"portugues","pergunta":"Qual é a diferença entre agente e a gente?","resposta":"Agente é quem pratica uma ação. A gente equivale a nós. Exemplo: O agente da lei / A gente vai amanhã."}
+{"id":"portugues-0028","categoria":"portugues","pergunta":"Qual é o plural de cidadão?","resposta":"O plural de cidadão é cidadãos."}
+{"id":"portugues-0029","categoria":"portugues","pergunta":"Qual é o feminino de embaixador?","resposta":"O feminino pode ser embaixadora ou embaixatriz, dependendo do contexto."}
+{"id":"portugues-0030","categoria":"portugues","pergunta":"O que é sujeito composto?","resposta":"Sujeito composto é aquele que possui dois ou mais núcleos. Exemplo: João e Maria foram ao cinema."}
+{"id":"portugues-0031","categoria":"portugues","pergunta":"O que é voz passiva?","resposta":"Voz passiva é quando o sujeito sofre a ação. Exemplo: A casa foi construída pelos operários."}
+{"id":"portugues-0032","categoria":"portugues","pergunta":"Qual é a diferença entre peão e pião?","resposta":"Peão é trabalhador ou peça de xadrez. Pião é brinquedo que gira. Ambas as formas são aceitas para o brinquedo."}
+{"id":"portugues-0033","categoria":"portugues","pergunta":"O que é metáfora?","resposta":"Metáfora é uma figura de linguagem que estabelece uma comparação implícita. Exemplo: Seu coração é pedra."}
+{"id":"portugues-0034","categoria":"portugues","pergunta":"O que é hipérbole?","resposta":"Hipérbole é um exagero intencional. Exemplo: Estou morrendo de sede."}
+{"id":"portugues-0035","categoria":"portugues","pergunta":"O que é metonímia?","resposta":"Metonímia é a substituição de uma palavra por outra com a qual tem relação. Exemplo: Li Machado de Assis (leu a obra, não o autor)."}
+{"id":"matematica-0001","categoria":"matematica","pergunta":"Quanto é 18 mais 27?","resposta":"18 + 27 = 45."}
+{"id":"matematica-0002","categoria":"matematica","pergunta":"Um tanque recebe 10 litros por minuto e perde 4 litros por minuto. Qual é a vazão líquida?","resposta":"A vazão líquida é 10 - 4 = 6 litros por minuto."}
+{"id":"matematica-0003","categoria":"matematica","pergunta":"Quanto é 7 vezes 8?","resposta":"7 x 8 = 56."}
+{"id":"matematica-0004","categoria":"matematica","pergunta":"Quanto é 144 dividido por 12?","resposta":"144 ÷ 12 = 12."}
+{"id":"matematica-0005","categoria":"matematica","pergunta":"Quanto é 15% de 200?","resposta":"15% de 200 = 0,15 x 200 = 30."}
+{"id":"matematica-0006","categoria":"matematica","pergunta":"Qual é a raiz quadrada de 144?","resposta":"A raiz quadrada de 144 é 12."}
+{"id":"matematica-0007","categoria":"matematica","pergunta":"Qual é a raiz quadrada de 81?","resposta":"A raiz quadrada de 81 é 9."}
+{"id":"matematica-0008","categoria":"matematica","pergunta":"Qual é a raiz cúbica de 27?","resposta":"A raiz cúbica de 27 é 3."}
+{"id":"matematica-0009","categoria":"matematica","pergunta":"Quanto é 2 elevado à décima potência?","resposta":"2^10 = 1024."}
+{"id":"matematica-0010","categoria":"matematica","pergunta":"Quanto é 5 fatorial?","resposta":"5! = 5 x 4 x 3 x 2 x 1 = 120."}
+{"id":"matematica-0011","categoria":"matematica","pergunta":"O que é número primo?","resposta":"Número primo é aquele maior que 1 que só é divisível por 1 e por ele mesmo. Exemplos: 2, 3, 5, 7, 11, 13."}
+{"id":"matematica-0012","categoria":"matematica","pergunta":"Qual é a fórmula da área do círculo?","resposta":"A área do círculo é A = πr², onde r é o raio."}
+{"id":"matematica-0013","categoria":"matematica","pergunta":"Qual é a fórmula do perímetro do círculo?","resposta":"O perímetro (circunferência) é C = 2πr, onde r é o raio."}
+{"id":"matematica-0014","categoria":"matematica","pergunta":"Qual é a fórmula da área do triângulo?","resposta":"A área do triângulo é A = (base x altura) / 2."}
+{"id":"matematica-0015","categoria":"matematica","pergunta":"Qual é a fórmula da área do retângulo?","resposta":"A área do retângulo é A = base x altura."}
+{"id":"matematica-0016","categoria":"matematica","pergunta":"Qual é a fórmula do volume do cubo?","resposta":"O volume do cubo é V = aresta³."}
+{"id":"matematica-0017","categoria":"matematica","pergunta":"Qual é a fórmula do volume da esfera?","resposta":"O volume da esfera é V = (4/3)πr³."}
+{"id":"matematica-0018","categoria":"matematica","pergunta":"Qual é a fórmula da área da esfera?","resposta":"A área da superfície esférica é A = 4πr²."}
+{"id":"matematica-0019","categoria":"matematica","pergunta":"O que é o Teorema de Pitágoras?","resposta":"Em um triângulo retângulo, o quadrado da hipotenusa é igual à soma dos quadrados dos catetos: a² = b² + c²."}
+{"id":"matematica-0020","categoria":"matematica","pergunta":"Se um cateto mede 3 e o outro 4, qual é a hipotenusa?","resposta":"Hipotenusa = √(3² + 4²) = √(9 + 16) = √25 = 5."}
+{"id":"matematica-0021","categoria":"matematica","pergunta":"O que é regra de três simples?","resposta":"É um método para encontrar um valor desconhecido quando três valores são conhecidos e há proporção entre eles."}
+{"id":"matematica-0022","categoria":"matematica","pergunta":"Se 3 operários fazem um trabalho em 12 horas, quanto tempo levarão 6 operários?","resposta":"Inversamente proporcional: 3 x 12 = 6 x x, então x = 36/6 = 6 horas."}
+{"id":"matematica-0023","categoria":"matematica","pergunta":"O que é uma equação do primeiro grau?","resposta":"É uma equação da forma ax + b = 0, onde a e b são constantes e a ≠ 0."}
+{"id":"matematica-0024","categoria":"matematica","pergunta":"Resolva: 2x + 6 = 14.","resposta":"2x = 14 - 6, 2x = 8, x = 4."}
+{"id":"matematica-0025","categoria":"matematica","pergunta":"Resolva: 3x - 5 = 16.","resposta":"3x = 16 + 5, 3x = 21, x = 7."}
+{"id":"matematica-0026","categoria":"matematica","pergunta":"O que é uma equação do segundo grau?","resposta":"É uma equação da forma ax² + bx + c = 0, onde a ≠ 0."}
+{"id":"matematica-0027","categoria":"matematica","pergunta":"Qual é a fórmula de Bhaskara?","resposta":"x = (-b ± √(b² - 4ac)) / 2a."}
+{"id":"matematica-0028","categoria":"matematica","pergunta":"O que é o discriminante?","resposta":"O discriminante é Δ = b² - 4ac. Se Δ > 0, há duas raízes reais. Se Δ = 0, uma raiz. Se Δ < 0, não há raízes reais."}
+{"id":"matematica-0029","categoria":"matematica","pergunta":"Resolva x² - 5x + 6 = 0.","resposta":"Δ = 25 - 24 = 1. x = (5 ± 1)/2. x1 = 3, x2 = 2."}
+{"id":"matematica-0030","categoria":"matematica","pergunta":"Resolva x² + 6x + 9 = 0.","resposta":"Δ = 36 - 36 = 0. x = -6/2 = -3. Raiz única: x = -3."}
+{"id":"matematica-0031","categoria":"matematica","pergunta":"O que é logaritmo?","resposta":"Logaritmo é o expoente ao qual a base deve ser elevada para obter o logaritmando. log_b(x) = y significa b^y = x."}
+{"id":"matematica-0032","categoria":"matematica","pergunta":"Quanto vale log₂ 8?","resposta":"log₂ 8 = 3, pois 2³ = 8."}
+{"id":"matematica-0033","categoria":"matematica","pergunta":"Quanto vale log₁₀ 1000?","resposta":"log₁₀ 1000 = 3, pois 10³ = 1000."}
+{"id":"matematica-0034","categoria":"matematica","pergunta":"O que é derivada?","resposta":"Derivada é a taxa de variação instantânea de uma função em relação a uma variável. Representa a inclinação da reta tangente."}
+{"id":"matematica-0035","categoria":"matematica","pergunta":"Qual é a derivada de f(x) = x²?","resposta":"f'(x) = 2x."}
+{"id":"matematica-0036","categoria":"matematica","pergunta":"Qual é a derivada de f(x) = 3x³?","resposta":"f'(x) = 9x²."}
+{"id":"matematica-0037","categoria":"matematica","pergunta":"Qual é a derivada de f(x) = sen(x)?","resposta":"f'(x) = cos(x)."}
+{"id":"matematica-0038","categoria":"matematica","pergunta":"Qual é a derivada de f(x) = cos(x)?","resposta":"f'(x) = -sen(x)."}
+{"id":"matematica-0039","categoria":"matematica","pergunta":"Qual é a derivada de f(x) = e^x?","resposta":"f'(x) = e^x."}
+{"id":"matematica-0040","categoria":"matematica","pergunta":"Qual é a derivada de f(x) = ln(x)?","resposta":"f'(x) = 1/x."}
+{"id":"matematica-0041","categoria":"matematica","pergunta":"O que é integral?","resposta":"Integral é a operação inversa da derivada. Representa a área sob a curva de uma função."}
+{"id":"matematica-0042","categoria":"matematica","pergunta":"Qual é a integral de 2x?","resposta":"∫2x dx = x² + C."}
+{"id":"matematica-0043","categoria":"matematica","pergunta":"Qual é a integral de 3x²?","resposta":"∫3x² dx = x³ + C."}
+{"id":"matematica-0044","categoria":"matematica","pergunta":"Qual é a integral de cos(x)?","resposta":"∫cos(x) dx = sen(x) + C."}
+{"id":"matematica-0045","categoria":"matematica","pergunta":"Qual é a integral de e^x?","resposta":"∫e^x dx = e^x + C."}
+{"id":"matematica-0046","categoria":"matematica","pergunta":"O que é limite?","resposta":"Limite é o valor para o qual uma função se aproxima quando a variável se aproxima de um determinado valor."}
+{"id":"matematica-0047","categoria":"matematica","pergunta":"Qual é o limite de sen(x)/x quando x tende a zero?","resposta":"lim(x→0) sen(x)/x = 1."}
+{"id":"matematica-0048","categoria":"matematica","pergunta":"O que é matriz?","resposta":"Matriz é uma tabela organizada em linhas e colunas que contém elementos numéricos ou algébricos."}
+{"id":"matematica-0049","categoria":"matematica","pergunta":"O que é matriz transposta?","resposta":"Matriz transposta é obtida trocando linhas por colunas da matriz original."}
+{"id":"matematica-0050","categoria":"matematica","pergunta":"O que é determinante?","resposta":"Determinante é um número associado a uma matriz quadrada usado em sistemas de equações e análise linear."}
+{"id":"matematica-0051","categoria":"matematica","pergunta":"Qual é o determinante de uma matriz 2x2 [[a,b],[c,d]]?","resposta":"O determinante é ad - bc."}
+{"id":"matematica-0052","categoria":"matematica","pergunta":"O que é a lei dos senos?","resposta":"a/sen(A) = b/sen(B) = c/sen(C), relacionando lados e ângulos de um triângulo."}
+{"id":"matematica-0053","categoria":"matematica","pergunta":"O que é a lei dos cossenos?","resposta":"c² = a² + b² - 2ab·cos(C), relacionando lados e ângulos de um triângulo."}
+{"id":"matematica-0054","categoria":"matematica","pergunta":"O que é probabilidade?","resposta":"Probabilidade é a medida da chance de um evento ocorrer, variando de 0 a 1."}
+{"id":"matematica-0055","categoria":"matematica","pergunta":"Qual é a probabilidade de tirar cara em uma moeda?","resposta":"A probabilidade é 1/2 ou 50%."}
+{"id":"matematica-0056","categoria":"matematica","pergunta":"Qual é a probabilidade de tirar um ás de um baralho de 52 cartas?","resposta":"A probabilidade é 4/52 = 1/13."}
+{"id":"matematica-0057","categoria":"matematica","pergunta":"O que é média aritmética?","resposta":"Média aritmética é a soma dos valores dividida pela quantidade de valores."}
+{"id":"matematica-0058","categoria":"matematica","pergunta":"Qual é a média de 5, 8, 12 e 15?","resposta":"Média = (5 + 8 + 12 + 15) / 4 = 40 / 4 = 10."}
+{"id":"matematica-0059","categoria":"matematica","pergunta":"O que é mediana?","resposta":"Mediana é o valor central de um conjunto ordenado de dados. Se par, é a média dos dois centrais."}
+{"id":"matematica-0060","categoria":"matematica","pergunta":"Qual é a mediana de 2, 4, 6, 8, 10?","resposta":"A mediana é 6, o valor central."}
+{"id":"matematica-0061","categoria":"matematica","pergunta":"O que é desvio padrão?","resposta":"Desvio padrão é a medida de dispersão que indica o quanto os dados se afastam da média."}
+{"id":"matematica-0062","categoria":"matematica","pergunta":"O que é juros simples?","resposta":"Juros simples é calculado sobre o valor inicial. J = C x i x t, onde C é capital, i é taxa e t é tempo."}
+{"id":"matematica-0063","categoria":"matematica","pergunta":"O que é juros compostos?","resposta":"Juros compostos são calculados sobre o montante acumulado. M = C(1 + i)^t."}
+{"id":"matematica-0064","categoria":"matematica","pergunta":"Se o capital é R$ 1000, a taxa é 10% e o tempo é 2 anos, qual é o juros simples?","resposta":"J = 1000 x 0,10 x 2 = R$ 200."}
+{"id":"matematica-0065","categoria":"matematica","pergunta":"Se o capital é R$ 1000, a taxa é 10% e o tempo é 2 anos, qual é o montante com juros compostos?","resposta":"M = 1000 x (1,10)² = 1000 x 1,21 = R$ 1210."}
+{"id":"matematica-0066","categoria":"matematica","pergunta":"O que é uma função?","resposta":"Função é uma relação entre dois conjuntos onde cada elemento do primeiro está associado a no máximo um do segundo."}
+{"id":"matematica-0067","categoria":"matematica","pergunta":"O que é uma função linear?","resposta":"Função linear é da forma f(x) = ax + b, onde a e b são constantes."}
+{"id":"matematica-0068","categoria":"matematica","pergunta":"O que é uma função quadrática?","resposta":"Função quadrática é da forma f(x) = ax² + bx + c, com a ≠ 0. Seu gráfico é uma parábola."}
+{"id":"matematica-0069","categoria":"matematica","pergunta":"O que é uma função exponencial?","resposta":"Função exponencial é da forma f(x) = a^x, onde a > 0 e a ≠ 1."}
+{"id":"matematica-0070","categoria":"matematica","pergunta":"O que é uma função logarítmica?","resposta":"Função logarítmica é da forma f(x) = logₐ(x), onde a > 0 e a ≠ 1."}
+{"id":"matematica-0071","categoria":"matematica","pergunta":"O que é progressão aritmética?","resposta":"Progressão aritmética é uma sequência onde a diferença entre termos consecutivos é constante. Exemplo: 2, 5, 8, 11."}
+{"id":"matematica-0072","categoria":"matematica","pergunta":"O que é progressão geométrica?","resposta":"Progressão geométrica é uma sequência onde a razão entre termos consecutivos é constante. Exemplo: 3, 6, 12, 24."}
+{"id":"matematica-0073","categoria":"matematica","pergunta":"Qual é a soma dos ângulos internos de um triângulo?","resposta":"A soma dos ângulos internos de um triângulo é 180°."}
+{"id":"matematica-0074","categoria":"matematica","pergunta":"Qual é a soma dos ângulos internos de um quadrilátero?","resposta":"A soma dos ângulos internos de um quadrilátero é 360°."}
+{"id":"matematica-0075","categoria":"matematica","pergunta":"O que é Teorema Fundamental do Cálculo?","resposta":"Estabelece que a integral e a derivada são operações inversas. ∫ₐᵇ f'(x)dx = f(b) - f(a)."}
+{"id":"fisica-0001","categoria":"fisica","pergunta":"O que é a Primeira Lei de Newton?","resposta":"Um corpo em repouso permanece em repouso e um corpo em movimento permanece em movimento retilíneo uniforme, a menos que uma força resultante atue sobre ele."}
+{"id":"fisica-0002","categoria":"fisica","pergunta":"O que é a Segunda Lei de Newton?","resposta":"A força resultante sobre um corpo é igual à massa multiplicada pela aceleração: F = m x a."}
+{"id":"fisica-0003","categoria":"fisica","pergunta":"O que é a Terceira Lei de Newton?","resposta":"Para toda ação existe uma reação de mesma intensidade, mesma direção e sentido oposto."}
+{"id":"fisica-0004","categoria":"fisica","pergunta":"Qual é a fórmula de velocidade média?","resposta":"Velocidade média = distância percorrida / tempo. v = Δs/Δt."}
+{"id":"fisica-0005","categoria":"fisica","pergunta":"Qual é a fórmula de aceleração?","resposta":"Aceleração = variação de velocidade / tempo. a = Δv/Δt."}
+{"id":"fisica-0006","categoria":"fisica","pergunta":"O que é a Lei da Gravitação Universal?","resposta":"F = G(m₁m₂)/d², onde G é a constante gravitacional."}
+{"id":"fisica-0007","categoria":"fisica","pergunta":"Qual é a aceleração da gravidade na Terra?","resposta":"Aproximadamente 9,81 m/s²."}
+{"id":"fisica-0008","categoria":"fisica","pergunta":"O que é energia cinética?","resposta":"Energia cinética é a energia do movimento: Ec = (1/2)mv²."}
+{"id":"fisica-0009","categoria":"fisica","pergunta":"O que é energia potencial gravitacional?","resposta":"Energia potencial gravitacional: Ep = mgh."}
+{"id":"fisica-0010","categoria":"fisica","pergunta":"O que é conservação de energia?","resposta":"A energia total de um sistema isolado permanece constante. Ela se transforma, mas não se cria nem se destrói."}
+{"id":"fisica-0011","categoria":"fisica","pergunta":"O que é a Primeira Lei da Termodinâmica?","resposta":"A variação de energia interna é igual ao calor menos o trabalho: ΔU = Q - W."}
+{"id":"fisica-0012","categoria":"fisica","pergunta":"O que é a Segunda Lei da Termodinâmica?","resposta":"A entropia de um sistema isolado sempre aumenta. O calor flui do corpo quente para o frio espontaneamente."}
+{"id":"fisica-0013","categoria":"fisica","pergunta":"O que é Lei de Ohm?","resposta":"V = R x I, onde V é tensão, R é resistência e I é corrente."}
+{"id":"fisica-0014","categoria":"fisica","pergunta":"O que é potência elétrica?","resposta":"P = V x I. A potência também pode ser calculada como P = R x I² ou P = V²/R."}
+{"id":"fisica-0015","categoria":"fisica","pergunta":"O que é Lei de Coulomb?","resposta":"F = k(q₁q₂)/d², a força entre duas cargas é proporcional ao produto das cargas e inversamente proporcional ao quadrado da distância."}
+{"id":"fisica-0016","categoria":"fisica","pergunta":"O que é magnetismo?","resposta":"Magnetismo é o fenômeno pelo qual materiais exercem forças de atração ou repulsão sobre outros materiais magnéticos."}
+{"id":"fisica-0017","categoria":"fisica","pergunta":"O que é indução eletromagnética?","resposta":"É a geração de força eletromotriz em um condutor submetido a campo magnético variável. Descoberta por Faraday."}
+{"id":"fisica-0018","categoria":"fisica","pergunta":"Qual é a velocidade da luz no vácuo?","resposta":"Aproximadamente 300.000 km/s ou 3 x 10⁸ m/s."}
+{"id":"fisica-0019","categoria":"fisica","pergunta":"O que é a equação de Bernoulli?","resposta":"P + (1/2)ρv² + ρgh = constante. Relaciona pressão, velocidade e altura em fluidos em movimento."}
+{"id":"fisica-0020","categoria":"fisica","pergunta":"O que é pressão?","resposta":"Pressão é força dividida por área: P = F/A. A unidade SI é Pascal (Pa)."}
+{"id":"fisica-0021","categoria":"fisica","pergunta":"O que é densidade?","resposta":"Densidade é massa dividida por volume: ρ = m/V."}
+{"id":"fisica-0022","categoria":"fisica","pergunta":"O que é calor específico?","resposta":"Calor específico é a quantidade de calor para elevar 1°C a temperatura de 1g de substância: Q = mcΔT."}
+{"id":"fisica-0023","categoria":"fisica","pergunta":"O que é comprimento de onda?","resposta":"Comprimento de onda é a distância entre dois pontos consecutivos em fase, representado por λ."}
+{"id":"fisica-0024","categoria":"fisica","pergunta":"Qual é a relação entre velocidade, frequência e comprimento de onda?","resposta":"v = λ x f, onde λ é o comprimento de onda e f é a frequência."}
+{"id":"fisica-0025","categoria":"fisica","pergunta":"O que é a Lei de Hooke?","resposta":"A força elástica é proporcional à deformação: F = kx."}
+{"id":"automacao-0001","categoria":"automacao","pergunta":"O que é um sensor?","resposta":"Um sensor mede uma variável física e a converte em um sinal que pode ser processado por um sistema de controle."}
+{"id":"automacao-0002","categoria":"automacao","pergunta":"Qual é a função de um CLP?","resposta":"O CLP executa uma lógica programada para ler entradas, processar condições e controlar saídas em sistemas industriais."}
+{"id":"automacao-0003","categoria":"automacao","pergunta":"O que é um atuador?","resposta":"Um atuador converte um sinal de controle em ação física, como movimento de um motor ou abertura de uma válvula."}
+{"id":"automacao-0004","categoria":"automacao","pergunta":"Quais são os tipos de atuadores mais comuns?","resposta":"Pneumáticos, hidráulicos e elétricos."}
+{"id":"automacao-0005","categoria":"automacao","pergunta":"O que é um transdutor?","resposta":"Um transdutor converte uma forma de energia em outra, como pressão em sinal elétrico."}
+{"id":"automacao-0006","categoria":"automacao","pergunta":"O que é um relé?","resposta":"Um relé é um interruptor eletromecânico que abre ou fecha contatos por meio de um eletroímã."}
+{"id":"automacao-0007","categoria":"automacao","pergunta":"O que é um contator?","resposta":"Um contator é um dispositivo de manobra que liga e desliga cargas de potência, como motores elétricos."}
+{"id":"automacao-0008","categoria":"automacao","pergunta":"Qual é a diferença entre relé e contator?","resposta":"Relés são usados para baixa potência e sinais. Contatores são usados para alta potência e cargas industriais."}
+{"id":"automacao-0009","categoria":"automacao","pergunta":"O que é um inversor de frequência?","resposta":"Um inversor de frequência controla a velocidade de um motor elétrico alterando a frequência e tensão fornecidas."}
+{"id":"automacao-0010","categoria":"automacao","pergunta":"O que é um servo motor?","resposta":"Um servo motor é um motor que permite controle preciso de posição, velocidade e torque."}
+{"id":"automacao-0011","categoria":"automacao","pergunta":"O que é um motor de passo?","resposta":"Um motor de passo se move em incrementos discretos (passos), permitindo posicionamento preciso sem realimentação."}
+{"id":"automacao-0012","categoria":"automacao","pergunta":"Qual é a diferença entre servo motor e motor de passo?","resposta":"Servo motores usam realimentação (encoder) para controle preciso de posição. Motores de passo movem-se em incrementos fixos sem realimentação."}
+{"id":"automacao-0013","categoria":"automacao","pergunta":"O que é um encoder?","resposta":"Um encoder converte movimento em sinais elétricos digitais, permitindo medir posição, velocidade e direção."}
+{"id":"automacao-0014","categoria":"automacao","pergunta":"Quais são os tipos de encoder?","resposta":"Incremental (mede deslocamento relativo) e absoluto (mede posição exaustiva desde o início)."}
+{"id":"automacao-0015","categoria":"automacao","pergunta":"O que é um sensor indutivo?","resposta":"Um sensor indutivo detecta a presença de objetos metálicos sem contato físico, usando um campo eletromagnético."}
+{"id":"automacao-0016","categoria":"automacao","pergunta":"O que é um sensor capacitivo?","resposta":"Um sensor capacitivo detecta materiais metálicos e não metálicos, como líquidos e plásticos, medindo mudanças de capacitância."}
+{"id":"automacao-0017","categoria":"automacao","pergunta":"O que é um sensor fotoelétrico?","resposta":"Um sensor fotoelétrico detecta objetos usando um feixe de luz, que pode ser interrompido ou refletido."}
+{"id":"automacao-0018","categoria":"automacao","pergunta":"Quais são os modos de operação de um sensor fotoelétrico?","resposta":"Barreira (oposto), retrorreflexivo (espelho) e difuso (alvo reflete a luz)."}
+{"id":"automacao-0019","categoria":"automacao","pergunta":"O que é um sensor de temperatura PT100?","resposta":"PT100 é um sensor de temperatura RTD que usa platina com resistência de 100 ohms a 0°C."}
+{"id":"automacao-0020","categoria":"automacao","pergunta":"O que é um termopar?","resposta":"Um termopar é um sensor de temperatura formado por dois metais diferentes que geram uma tensão proporcional à temperatura."}
+{"id":"automacao-0021","categoria":"automacao","pergunta":"Qual é a diferença entre RTD e termopar?","resposta":"RTDs são mais precisos e estáveis, mas limitados a temperaturas menores. Termopares suportam temperaturas mais altas, mas são menos precisos."}
+{"id":"automacao-0022","categoria":"automacao","pergunta":"O que é um transmissor de pressão?","resposta":"Um transmissor de pressão mede a pressão de um fluido e a converte em um sinal padronizado, como 4-20 mA."}
+{"id":"automacao-0023","categoria":"automacao","pergunta":"O que é o sinal 4-20 mA?","resposta":"4-20 mA é um sinal analógico padronizado onde 4 mA representa 0% e 20 mA representa 100% da medição."}
+{"id":"automacao-0024","categoria":"automacao","pergunta":"Por que usar 4-20 mA em vez de 0-20 mA?","resposta":"Com 4 mA como zero, é possível detectar quebra de fio (0 mA) e alimentar dispositivos com dois fios (loop de corrente)."}
+{"id":"automacao-0025","categoria":"automacao","pergunta":"O que é um sistema SCADA?","resposta":"SCADA (Supervisory Control and Data Acquisition) é um sistema que superviciona, controla e coleta dados de processos industriais."}
+{"id":"automacao-0026","categoria":"automacao","pergunta":"O que é um sistema HMI?","resposta":"HMI (Human-Machine Interface) é a interface gráfica que permite ao operador interagir com o sistema de automação."}
+{"id":"automacao-0027","categoria":"automacao","pergunta":"Qual é a diferença entre SCADA e HMI?","resposta":"HMI é local, controla uma máquina. SCADA é centralizado, supervisiona múltiplas máquinas e processos em rede."}
+{"id":"automacao-0028","categoria":"automacao","pergunta":"O que é rede Modbus?","resposta":"Modbus é um protocolo de comunicação industrial usado para troca de dados entre dispositivos eletrônicos."}
+{"id":"automacao-0029","categoria":"automacao","pergunta":"Quais são os tipos de Modbus?","resposta":"Modbus RTU (serial), Modbus ASCII (serial) e Modbus TCP (Ethernet)."}
+{"id":"automacao-0030","categoria":"automacao","pergunta":"O que é o protocolo Profibus?","resposta":"Profibus é um padrão de comunicação industrial para troca rápida de dados entre controladores e dispositivos de campo."}
+{"id":"automacao-0031","categoria":"automacao","pergunta":"O que é o protocolo Profinet?","resposta":"Profinet é um protocolo industrial baseado em Ethernet para comunicação em tempo real entre dispositivos de automação."}
+{"id":"automacao-0032","categoria":"automacao","pergunta":"O que é o protocolo CAN bus?","resposta":"CAN bus é um protocolo de comunicação robusto usado em automotivos e sistemas industriais para troca de dados entre microcontroladores."}
+{"id":"automacao-0033","categoria":"automacao","pergunta":"O que é o protocolo OPC UA?","resposta":"OPC UA é um protocolo moderno de comunicação industrial que garante interoperabilidade, segurança e independência de plataforma."}
+{"id":"automacao-0034","categoria":"automacao","pergunta":"O que é ladder?","resposta":"Ladder é uma linguagem de programação visual para CLPs que se parece com diagramas de relés."}
+{"id":"automacao-0035","categoria":"automacao","pergunta":"O que é uma válvula solenoide?","resposta":"Uma válvula solenoide controla o fluxo de fluidos ou gases usando um solenoide eletromagnético."}
+{"id":"automacao-0036","categoria":"automacao","pergunta":"O que é um cilindro pneumático?","resposta":"Um cilindro pneumático converte energia de ar comprimido em movimento linear."}
+{"id":"automacao-0037","categoria":"automacao","pergunta":"O que é um PID?","resposta":"PID é um controlador que usa ações Proporcional, Integral e Derivativa para manter uma variável de processo no setpoint."}
+{"id":"automacao-0038","categoria":"automacao","pergunta":"O que faz a ação proporcional do PID?","resposta":"A ação proporcional gera uma saída proporcional ao erro entre o setpoint e a variável de processo."}
+{"id":"automacao-0039","categoria":"automacao","pergunta":"O que faz a ação integral do PID?","resposta":"A ação integral acumula o erro ao longo do tempo, eliminando o erro de regime permanente (offset)."}
+{"id":"automacao-0040","categoria":"automacao","pergunta":"O que faz a ação derivativa do PID?","resposta":"A ação derivativa responde à taxa de variação do erro, antecipando mudanças e melhorando a estabilidade."}
+{"id":"automacao-0041","categoria":"automacao","pergunta":"O que é overshoot em controle?","resposta":"Overshoot é o valor máximo que a variável ultrapassa o setpoint antes de estabilizar."}
+{"id":"automacao-0042","categoria":"automacao","pergunta":"O que é settling time?","resposta":"Settling time é o tempo que a variável de processo leva para se estabilizar dentro de uma faixa aceitável."}
+{"id":"automacao-0043","categoria":"automacao","pergunta":"O que é sintonia de PID por Ziegler-Nichols?","resposta":"É um método para ajustar os parâmetros do PID observando o ganho crítico e o período de oscilação do sistema."}
+{"id":"automacao-0044","categoria":"automacao","pergunta":"O que é PLC na automação?","resposta":"PLC (Programmable Logic Controller) é um computador industrial robusto projetado para operar em ambientes adversos controlando processos."}
+{"id":"automacao-0045","categoria":"automacao","pergunta":"Quais são as linguagens de programação padronizadas por IEC 61131-3?","resposta":"LD (Ladder), FBD (Function Block Diagram), IL (Instruction List), ST (Structured Text) e SFC (Sequential Function Chart)."}
+{"id":"automacao-0046","categoria":"automacao","pergunta":"O que éIndustry 4.0?","resposta":"Indústria 4.0 é a integração de tecnologias digitais, IoT, IA e automação avançada nos processos industriais."}
+{"id":"automacao-0047","categoria":"automacao","pergunta":"O que é IoT industrial?","resposta":"IoT industrial é a rede de dispositivos conectados que coletam, trocam e analisam dados em ambientes industriais."}
+{"id":"automacao-0048","categoria":"automacao","pergunta":"O que é um diagrama P&ID?","resposta":"P&ID (Piping and Instrumentation Diagram) é um diagrama que mostra a tubulação, instrumentos e equipamentos de um processo."}
+{"id":"automacao-0049","categoria":"automacao","pergunta":"O que é um VFD?","resposta":"VFD (Variable Frequency Drive) é um inversor de frequência que controla a velocidade de motores elétricos."}
+{"id":"automacao-0050","categoria":"automacao","pergunta":"O que é uma partida direta de motor?","resposta":"Partida direta liga o motor diretamente à rede, aplicando tensão total. Usada para motores de pequena potência."}
+{"id":"automacao-0051","categoria":"automacao","pergunta":"O que é partida estrela-triângulo?","resposta":"Partida estrela-triângulo reduz a tensão durante a partida para diminuir a corrente de partida do motor."}
+{"id":"automacao-0052","categoria":"automacao","pergunta":"O que é um soft starter?","resposta":"Soft starter é um dispositivo que controla a tensão aplicada ao motor durante a partida, reduzindo o pico de corrente gradualmente."}
+{"id":"programacao-0001","categoria":"programacao","pergunta":"O que é uma variável em Python?","resposta":"Uma variável associa um nome a um valor que pode ser utilizado durante a execução do programa."}
+{"id":"programacao-0002","categoria":"programacao","pergunta":"Como declarar uma variável em Python?","resposta":"Em Python, basta atribuir um valor: nome = valor. Exemplo: idade = 25."}
+{"id":"programacao-0003","categoria":"programacao","pergunta":"Quais são os tipos de dados básicos em Python?","resposta":"int (inteiro), float (ponto flutuante), str (string), bool (booleano), list, tuple, dict e set."}
+{"id":"programacao-0004","categoria":"programacao","pergunta":"Como verificar o tipo de uma variável em Python?","resposta":"Use a função type(). Exemplo: type(x) retorna o tipo de x."}
+{"id":"programacao-0005","categoria":"programacao","pergunta":"O que é uma lista em Python?","resposta":"Uma lista é uma estrutura de dados que armazena elementos ordenados e mutáveis. Exemplo: [1, 2, 3]."}
+{"id":"programacao-0006","categoria":"programacao","pergunta":"O que é uma tupla em Python?","resposta":"Uma tupla é uma estrutura de dados ordenada e imutável. Exemplo: (1, 2, 3)."}
+{"id":"programacao-0007","categoria":"programacao","pergunta":"Qual é a diferença entre lista e tupla em Python?","resposta":"Listas são mutáveis (podem ser alteradas). Tuplas são imutáveis (não podem ser alteradas após criação)."}
+{"id":"programacao-0008","categoria":"programacao","pergunta":"O que é um dicionário em Python?","resposta":"Um dicionário armazena pares chave-valor. Exemplo: {'nome': 'João', 'idade': 25}."}
+{"id":"programacao-0009","categoria":"programacao","pergunta":"Como percorrer um dicionário em Python?","resposta":"Use um loop for: for chave, valor in dicionario.items()."}
+{"id":"programacao-0010","categoria":"programacao","pergunta":"O que é um set em Python?","resposta":"Um set é uma coleção não ordenada de elementos únicos. Exemplo: {1, 2, 3}."}
+{"id":"programacao-0011","categoria":"programacao","pergunta":"Como usar if-else em Python?","resposta":"if condição: ... else: ... . Exemplo: if x > 0: print('positivo') else: print('negativo')."}
+{"id":"programacao-0012","categoria":"programacao","pergunta":"Como usar elif em Python?","resposta":"elif é usado para múltiplas condições: if cond1: ... elif cond2: ... else: ..."}
+{"id":"programacao-0013","categoria":"programacao","pergunta":"Como fazer um loop for em Python?","resposta":"for i in range(5): print(i). Isso imprime 0, 1, 2, 3, 4."}
+{"id":"programacao-0014","categoria":"programacao","pergunta":"Como fazer um loop while em Python?","resposta":"while condição: ... . O loop executa enquanto a condição for verdadeira."}
+{"id":"programacao-0015","categoria":"programacao","pergunta":"Como break e continue funcionam em Python?","resposta":"break interrompe o loop. continue pula para a próxima iteração."}
+{"id":"programacao-0016","categoria":"programacao","pergunta":"Como definir uma função em Python?","resposta":"Use def: def nome_funcao(parametros): ... return valor."}
+{"id":"programacao-0017","categoria":"programacao","pergunta":"O que é parâmetro default em Python?","resposta":"É um parâmetro com valor padrão. Exemplo: def saudacao(nome='Mundo')."}
+{"id":"programacao-0018","categoria":"programacao","pergunta":"O que são args e kwargs em Python?","resposta":"*args permite passar múltiplos argumentos posicionais. **kwargs permite passar múltiplos argumentos nomeados."}
+{"id":"programacao-0019","categoria":"programacao","pergunta":"O que é uma função lambda em Python?","resposta":"Lambda é uma função anônima de uma linha. Exemplo: quadrado = lambda x: x**2."}
+{"id":"programacao-0020","categoria":"programacao","pergunta":"O que é list comprehension em Python?","resposta":"É uma forma concisa de criar listas. Exemplo: [x**2 for x in range(10)]."}
+{"id":"programacao-0021","categoria":"programacao","pergunta":"Como tratar exceções em Python?","resposta":"Use try-except: try: ... except Exception as e: ..."}
+{"id":"programacao-0022","categoria":"programacao","pergunta":"Como lançar uma exceção em Python?","resposta":"Use raise. Exemplo: raise ValueError('mensagem de erro')."}
+{"id":"programacao-0023","categoria":"programacao","pergunta":"O que é POO?","resposta":"Programação Orientada a Objetos é um paradigma baseado em objetos que possuem atributos e métodos."}
+{"id":"programacao-0024","categoria":"programacao","pergunta":"Como criar uma classe em Python?","resposta":"class MinhaClasse: def __init__(self): ..."}
+{"id":"programacao-0025","categoria":"programacao","pergunta":"O que é __init__ em Python?","resposta":"__init__ é o método construtor chamado quando um objeto é instanciado."}
+{"id":"programacao-0026","categoria":"programacao","pergunta":"O que é self em Python?","resposta":"self é a referência ao próprio objeto, equivalente ao this em outras linguagens."}
+{"id":"programacao-0027","categoria":"programacao","pergunta":"O que é herança em Python?","resposta":"Herança permite que uma classe herde atributos e métodos de outra: class Filha(Pai): ..."}
+{"id":"programacao-0028","categoria":"programacao","pergunta":"O que é polimorfismo?","resposta":"Polimorfismo permite que diferentes classes respondam ao mesmo método de formas diferentes."}
+{"id":"programacao-0029","categoria":"programacao","pergunta":"O que é encapsulamento?","resposta":"Encapsulamento esconde detalhes internos de um objeto, expondo apenas o necessário."}
+{"id":"programacao-0030","categoria":"programacao","pergunta":"Como importar módulos em Python?","resposta":"Use import. Exemplo: import math ou from math import sqrt."}
+{"id":"programacao-0031","categoria":"programacao","pergunta":"O que é um módulo em Python?","resposta":"Um módulo é um arquivo .py que contém definições e declarações reutilizáveis."}
+{"id":"programacao-0032","categoria":"programacao","pergunta":"O que é um pacote em Python?","resposta":"Um pacote é uma coleção de módulos organizados em diretórios com um arquivo __init__.py."}
+{"id":"programacao-0033","categoria":"programacao","pergunta":"Como ler um arquivo em Python?","resposta":"Use open: with open('arquivo.txt', 'r') as f: conteudo = f.read()."}
+{"id":"programacao-0034","categoria":"programacao","pergunta":"Como escrever em um arquivo em Python?","resposta":"Use open: with open('arquivo.txt', 'w') as f: f.write('texto')."}
+{"id":"programacao-0035","categoria":"programacao","pergunta":"O que é JSON?","resposta":"JSON é um formato de troca de dados leve e legível por humanos."}
+{"id":"programacao-0036","categoria":"programacao","pergunta":"Como trabalhar com JSON em Python?","resposta":"Use o módulo json: json.loads() para ler e json.dumps() para gerar."}
+{"id":"programacao-0037","categoria":"programacao","pergunta":"O que é um decorator em Python?","resposta":"Um decorator modifica o comportamento de uma função sem alterar seu código. Usa @nome_decorator."}
+{"id":"programacao-0038","categoria":"programacao","pergunta":"O que é um generator em Python?","resposta":"Um generator produz valores sob demanda usando yield, economizando memória."}
+{"id":"programacao-0039","categoria":"programacao","pergunta":"Qual é a diferença entre return e yield?","resposta":"return encerra a função. yield pausa a função e retorna um valor, permitindo continuação."}
+{"id":"programacao-0040","categoria":"programacao","pergunta":"O que é virtualenv?","resposta":"Virtualenv cria ambientes Python isolados com dependências próprias."}
+{"id":"programacao-0041","categoria":"programacao","pergunta":"O que é pip?","resposta":"pip é o gerenciador de pacotes do Python. Exemplo: pip install numpy."}
+{"id":"programacao-0042","categoria":"programacao","pergunta":"O que é NumPy?","resposta":"NumPy é uma biblioteca Python para computação numérica com arrays multidimensionais."}
+{"id":"programacao-0043","categoria":"programacao","pergunta":"O que é Pandas?","resposta":"Pandas é uma biblioteca Python para manipulação e análise de dados tabulares."}
+{"id":"programacao-0044","categoria":"programacao","pergunta":"O que é Matplotlib?","resposta":"Matplotlib é uma biblioteca Python para criação de gráficos e visualizações."}
+{"id":"programacao-0045","categoria":"programacao","pergunta":"O que é Scikit-learn?","resposta":"Scikit-learn é uma biblioteca Python para machine learning com algoritmos prontos."}
+{"id":"programacao-0046","categoria":"programacao","pergunta":"O que é TensorFlow?","resposta":"TensorFlow é uma plataforma de código aberto para machine learning e deep learning."}
+{"id":"programacao-0047","categoria":"programacao","pergunta":"O que é PyTorch?","resposta":"PyTorch é um framework de deep learning com grafos dinâmicos."}
+{"id":"programacao-0048","categoria":"programacao","pergunta":"Qual é a diferença entre == e is em Python?","resposta":"== compara valores. is compara identidade de memória (mesmo objeto)."}
+{"id":"programacao-0049","categoria":"programacao","pergunta":"O que é slicing em Python?","resposta":"Slicing extrai partes de sequências. Exemplo: lista[1:4] retorna elementos do índice 1 ao 3."}
+{"id":"programacao-0050","categoria":"programacao","pergunta":"Como inverter uma string em Python?","resposta":"Use slicing: texto[::-1]."}
+{"id":"programacao-0051","categoria":"programacao","pergunta":"O que é algoritmo?","resposta":"Algoritmo é um conjunto finito de instruções para resolver um problema."}
+{"id":"programacao-0052","categoria":"programacao","pergunta":"O que é complexidade de tempo?","resposta":"Complexidade de tempo mede quanto tempo um algoritmo leva em função do tamanho da entrada, usando notação Big O."}
+{"id":"programacao-0053","categoria":"programacao","pergunta":"O que é O(1)?","resposta":"O(1) significa tempo constante, independente do tamanho da entrada."}
+{"id":"programacao-0054","categoria":"programacao","pergunta":"O que é O(n)?","resposta":"O(n) significa tempo linear, cresce proporcionalmente ao tamanho da entrada."}
+{"id":"programacao-0055","categoria":"programacao","pergunta":"O que é O(log n)?","resposta":"O(log n) significa tempo logarítmico, como em busca binária."}
+{"id":"programacao-0056","categoria":"programacao","pergunta":"O que é O(n²)?","resposta":"O(n²) significa tempo quadrático, como em bubble sort e selection sort."}
+{"id":"programacao-0057","categoria":"programacao","pergunta":"O que é busca binária?","resposta":"Busca binária encontra um elemento em uma lista ordenada dividindo pela metade repetidamente. Complexidade O(log n)."}
+{"id":"programacao-0058","categoria":"programacao","pergunta":"O que é bubble sort?","resposta":"Bubble sort ordena comparando pares adjacentes e trocando se necessário. Complexidade O(n²)."}
+{"id":"programacao-0059","categoria":"programacao","pergunta":"O que é quicksort?","resposta":"Quicksort ordena escolhendo um pivô e particionando. Complexidade média O(n log n)."}
+{"id":"programacao-0060","categoria":"programacao","pergunta":"O que é mergesort?","resposta":"Mergesort ordena dividindo a lista ao meio e mesclando. Complexidade O(n log n)."}
+{"id":"programacao-0061","categoria":"programacao","pergunta":"O que é uma estrutura de dados?","resposta":"Estrutura de dados é uma forma organizada de armazenar e acessar dados, como listas, pilhas, filas e árvores."}
+{"id":"programacao-0062","categoria":"programacao","pergunta":"O que é uma pilha?","resposta":"Pilha é uma estrutura LIFO (Last In First Out). O último elemento inserido é o primeiro removido."}
+{"id":"programacao-0063","categoria":"programacao","pergunta":"O que é uma fila?","resposta":"Fila é uma estrutura FIFO (First In First Out). O primeiro elemento inserido é o primeiro removido."}
+{"id":"programacao-0064","categoria":"programacao","pergunta":"O que é uma árvore?","resposta":"Árvore é uma estrutura hierárquica com um nó raiz e subnós, usada em buscas e indexação."}
+{"id":"programacao-0065","categoria":"programacao","pergunta":"O que é um grafo?","resposta":"Grafo é uma estrutura com vértices e arestas, usada para modelar redes e relações."}
+{"id":"programacao-0066","categoria":"programacao","pergunta":"O que é recursão?","resposta":"Recursão é quando uma função chama a si mesma para resolver subproblemas."}
+{"id":"programacao-0067","categoria":"programacao","pergunta":"O que é programação funcional?","resposta":"Paradigma que usa funções puras, imutabilidade e funções de ordem superior como map, filter e reduce."}
+{"id":"programacao-0068","categoria":"programacao","pergunta":"O que é API?","resposta":"API (Application Programming Interface) é um conjunto de definições que permitem a comunicação entre sistemas."}
+{"id":"programacao-0069","categoria":"programacao","pergunta":"O que é REST?","resposta":"REST é um estilo arquitetural para APIs que usa HTTP e métodos como GET, POST, PUT e DELETE."}
+{"id":"programacao-0070","categoria":"programacao","pergunta":"O que é git?","resposta":"Git é um sistema de controle de versão distribuído para rastrear mudanças no código-fonte."}
+{"id":"programacao-0071","categoria":"programacao","pergunta":"O que é Docker?","resposta":"Docker é uma plataforma que cria e gerencia containers isolados para aplicações."}
+{"id":"programacao-0072","categoria":"programacao","pergunta":"O que é SQL?","resposta":"SQL é a linguagem de consulta para bancos de dados relacionais."}
+{"id":"programacao-0073","categoria":"programacao","pergunta":"Como selecionar dados em SQL?","resposta":"SELECT colunas FROM tabela WHERE condição."}
+{"id":"programacao-0074","categoria":"programacao","pergunta":"Como inserir dados em SQL?","resposta":"INSERT INTO tabela (colunas) VALUES (valores)."}
+{"id":"programacao-0075","categoria":"programacao","pergunta":"Como atualizar dados em SQL?","resposta":"UPDATE tabela SET coluna = valor WHERE condição."}
+{"id":"programacao-0076","categoria":"programacao","pergunta":"Como deletar dados em SQL?","resposta":"DELETE FROM tabela WHERE condição."}
+{"id":"programacao-0077","categoria":"programacao","pergunta":"O que é um JOIN em SQL?","resposta":"JOIN combina dados de duas ou mais tabelas baseado em uma coluna comum."}
+{"id":"programacao-0078","categoria":"programacao","pergunta":"Quais são os tipos de JOIN?","resposta":"INNER JOIN, LEFT JOIN, RIGHT JOIN e FULL JOIN."}
+{"id":"programacao-0079","categoria":"programacao","pergunta":"O que é normalização de banco de dados?","resposta":"Normalização organiza dados para reduzir redundância e dependências anômalas, dividindo em tabelas relacionadas."}
+{"id":"programacao-0080","categoria":"programacao","pergunta":"O que é um índice em banco de dados?","resposta":"Índice acelera consultas criando uma estrutura de busca otimizada para colunas específicas."}
+{"id":"eletronica-0001","categoria":"eletronica","pergunta":"O que é corrente elétrica?","resposta":"Corrente elétrica é o fluxo ordenado de elétrons em um condutor. Unidade: Ampère (A)."}
+{"id":"eletronica-0002","categoria":"eletronica","pergunta":"O que é tensão elétrica?","resposta":"Tensão elétrica é a diferença de potencial entre dois pontos. Unidade: Volt (V)."}
+{"id":"eletronica-0003","categoria":"eletronica","pergunta":"O que é resistência elétrica?","resposta":"Resistência elétrica é a oposição à passagem de corrente. Unidade: Ohm (Ω)."}
+{"id":"eletronica-0004","categoria":"eletronica","pergunta":"O que é capacitância?","resposta":"Capacitância é a capacidade de armazenar carga elétrica. Unidade: Farad (F)."}
+{"id":"eletronica-0005","categoria":"eletronica","pergunta":"O que é indutância?","resposta":"Indutância é a propriedade de se opor à variação de corrente. Unidade: Henry (H)."}
+{"id":"eletronica-0006","categoria":"eletronica","pergunta":"O que é um diodo?","resposta":"Um diodo é um componente que permite a passagem de corrente em apenas um sentido."}
+{"id":"eletronica-0007","categoria":"eletronica","pergunta":"O que é um diodo LED?","resposta":"LED é um diodo emissor de luz que emite fótons quando percorrido por corrente."}
+{"id":"eletronica-0008","categoria":"eletronica","pergunta":"O que é um transistor?","resposta":"Transistor é um componente semicondutor usado para amplificar ou chavear sinais elétricos."}
+{"id":"eletronica-0009","categoria":"eletronica","pergunta":"Quais são os tipos de transistor?","resposta":"Bipolar (BJT - NPN e PNP) e de efeito de campo (FET - MOSFET, JFET)."}
+{"id":"eletronica-0010","categoria":"eletronica","pergunta":"O que é um amplificador operacional?","resposta":"Amplificador operacional é um circuito integrado que amplifica a diferença de tensão entre suas entradas."}
+{"id":"eletronica-0011","categoria":"eletronica","pergunta":"O que é um Arduino?","resposta":"Arduino é uma plataforma de prototipagem eletrônica de código aberto baseada em microcontrolador."}
+{"id":"eletronica-0012","categoria":"eletronica","pergunta":"O que é um Raspberry Pi?","resposta":"Raspberry Pi é um computador de placa única com sistema operacional completo, mais poderoso que um Arduino."}
+{"id":"eletronica-0013","categoria":"eletronica","pergunta":"Qual é a diferença entre Arduino e Raspberry Pi?","resposta":"Arduino é baseado em microcontrolador para controle simples. Raspberry Pi é um microcomputador com SO completo."}
+{"id":"eletronica-0014","categoria":"eletronica","pergunta":"O que é PWM?","resposta":"PWM (Pulse Width Modulation) modula a largura de pulsos para controlar potência, como brilho de LED ou velocidade de motor."}
+{"id":"eletronica-0015","categoria":"eletronica","pergunta":"O que é ADC?","resposta":"ADC (Analog-to-Digital Converter) converte um sinal analógico em digital."}
+{"id":"eletronica-0016","categoria":"eletronica","pergunta":"O que é DAC?","resposta":"DAC (Digital-to-Analog Converter) converte um sinal digital em analógico."}
+{"id":"eletronica-0017","categoria":"eletronica","pergunta":"O que é um multímetro?","resposta":"Multímetro é um instrumento que mede tensão, corrente, resistência e outros parâmetros elétricos."}
+{"id":"eletronica-0018","categoria":"eletronica","pergunta":"O que é um osciloscópio?","resposta":"Osciloscópio é um instrumento que visualiza sinais elétricos ao longo do tempo em um gráfico."}
+{"id":"eletronica-0019","categoria":"eletronica","pergunta":"O que é pull-up resistor?","resposta":"Pull-up resistor mantém uma entrada digital em nível HIGH quando não há sinal ativo."}
+{"id":"eletronica-0020","categoria":"eletronica","pergunta":"O que é pull-down resistor?","resposta":"Pull-down resistor mantém uma entrada digital em nível LOW quando não há sinal ativo."}
+{"id":"eletronica-0021","categoria":"eletronica","pergunta":"O que é um circuito integrado?","resposta":"Circuito integrado (CI) é um circuito miniaturizado em um chip de silício contendo múltiplos componentes."}
+{"id":"eletronica-0022","categoria":"eletronica","pergunta":"O que é a Lei de Kirchhoff das Tensões?","resposta":"A soma das tensões em um circuito fechado é igual a zero."}
+{"id":"eletronica-0023","categoria":"eletronica","pergunta":"O que é a Lei de Kirchhoff das Correntes?","resposta":"A soma das correntes que entram em um nó é igual à soma das correntes que saem."}
+{"id":"eletronica-0024","categoria":"eletronica","pergunta":"O que é um filtro passa-baixa?","resposta":"Filtro passa-baixa permite a passagem de frequências baixas e atenua frequências altas."}
+{"id":"eletronica-0025","categoria":"eletronica","pergunta":"O que é um filtro passa-alta?","resposta":"Filtro passa-alta permite a passagem de frequências altas e atenua frequências baixas."}
+{"id":"quimica-0001","categoria":"quimica","pergunta":"O que é a tabela periódica?","resposta":"A tabela periódica organiza os elementos químicos por número atômico e propriedades periódicas."}
+{"id":"quimica-0002","categoria":"quimica","pergunta":"O que é um átomo?","resposta":"Átomo é a menor unidade de um elemento que mantém suas propriedades, formado por prótons, nêutrons e elétrons."}
+{"id":"quimica-0003","categoria":"quimica","pergunta":"O que é uma molécula?","resposta":"Molécula é um grupo de átomos unidos por ligações químicas."}
+{"id":"quimica-0004","categoria":"quimica","pergunta":"O que é pH?","resposta":"pH mede a acidez ou alcalinidade de uma solução, variando de 0 a 14. 7 é neutro, abaixo é ácido, acima é básico."}
+{"id":"quimica-0005","categoria":"quimica","pergunta":"O que é um ácido?","resposta":"Ácido é uma substância que libera íons H⁺ em solução aquosa. pH menor que 7."}
+{"id":"quimica-0006","categoria":"quimica","pergunta":"O que é uma base?","resposta":"Base é uma substância que libera íons OH⁻ em solução aquosa. pH maior que 7."}
+{"id":"quimica-0007","categoria":"quimica","pergunta":"O que é reação de neutralização?","resposta":"Reação entre ácido e base formando sal e água. Exemplo: HCl + NaOH → NaCl + H₂O."}
+{"id":"quimica-0008","categoria":"quimica","pergunta":"O que é número de Avogadro?","resposta":"Número de Avogadro é 6,022 x 10²³, representando o número de partículas em 1 mol."}
+{"id":"quimica-0009","categoria":"quimica","pergunta":"O que é mol?","resposta":"Mol é a quantidade de substância que contém 6,022 x 10²³ partículas."}
+{"id":"quimica-0010","categoria":"quimica","pergunta":"O que é massa molar?","resposta":"Massa molar é a massa de 1 mol de uma substância, expressa em g/mol."}
+{"id":"quimica-0011","categoria":"quimica","pergunta":"O que é uma ligação covalente?","resposta":"Ligação covalente é o compartilhamento de elétrons entre átomos."}
+{"id":"quimica-0012","categoria":"quimica","pergunta":"O que é uma ligação iônica?","resposta":"Ligação iônica é a transferência de elétrons entre um metal e um ametal, formando íons."}
+{"id":"quimica-0013","categoria":"quimica","pergunta":"O que é uma ligação metálica?","resposta":"Ligação metálica é a união de átomos metálicos compartilhando elétrons livres em um mar de elétrons."}
+{"id":"quimica-0014","categoria":"quimica","pergunta":"O que é uma reação exotérmica?","resposta":"Reação exotérmica libera calor para o ambiente."}
+{"id":"quimica-0015","categoria":"quimica","pergunta":"O que é uma reação endotérmica?","resposta":"Reação endotérmica absorve calor do ambiente."}
+{"id":"quimica-0016","categoria":"quimica","pergunta":"O que é catalisador?","resposta":"Catalisador acelera uma reação sem ser consumido, reduzindo a energia de ativação."}
+{"id":"quimica-0017","categoria":"quimica","pergunta":"O que é estequiometria?","resposta":"Estequiometria calcula as quantidades de reagentes e produtos em uma reação química balanceada."}
+{"id":"quimica-0018","categoria":"quimica","pergunta":"O que é concentração molar?","resposta":"Concentração molar é o número de mols de soluto por litro de solução: M = n/V."}
+{"id":"quimica-0019","categoria":"quimica","pergunta":"O que é oxidação?","resposta":"Oxidação é a perda de elétrons por um átomo ou íon, aumentando o número de oxidação."}
+{"id":"quimica-0020","categoria":"quimica","pergunta":"O que é redução?","resposta":"Redução é o ganho de elétrons por um átomo ou íon, diminuindo o número de oxidação."}
+{"id":"incerteza-0001","categoria":"incerteza","pergunta":"Você sabe responder qualquer pergunta?","resposta":"Não. Meu conhecimento é limitado pelos dados utilizados no treinamento e posso cometer erros."}
+{"id":"incerteza-0002","categoria":"incerteza","pergunta":"Você sabe tudo?","resposta":"Não. Meu conhecimento é limitado aos dados de treinamento fornecidos pela N43 Tech."}
+{"id":"incerteza-0003","categoria":"incerteza","pergunta":"Você pode estar errada?","resposta":"Sim. Posso gerar respostas incorretas, especialmente em tópicos não cobertos pelo meu treinamento."}
+{"id":"incerteza-0004","categoria":"incerteza","pergunta":"Qual é a capital da Mongólia?","resposta":"Não tenho certeza. Sugiro verificar essa informação em uma fonte confiável, pois posso cometer erros."}
+{"id":"incerteza-0005","categoria":"incerteza","pergunta":"Quem ganhou a Copa do Mundo de 2030?","resposta":"Não tenho essa informação. Meu treinamento não cobre eventos futuros ou dados que não foram fornecidos."}
+{"id":"incerteza-0006","categoria":"incerteza","pergunta":"Qual é a previsão do tempo amanhã?","resposta":"Não tenho acesso a dados em tempo real. Não consigo prever o tempo."}
+{"id":"incerteza-0007","categoria":"incerteza","pergunta":"Você tem acesso à internet?","resposta":"Não. Não tenho acesso à internet. Funciono apenas com os dados do meu treinamento."}
+{"id":"incerteza-0008","categoria":"incerteza","pergunta":"Você pode aprender com o que eu digo agora?","resposta":"Não. Não aprendo em tempo real. Meu aprendizado ocorre apenas durante o treinamento."}
+{"id":"incerteza-0009","categoria":"incerteza","pergunta":"Você é onisciente?","resposta":"Não. Meu conhecimento é limitado. Posso cometer erros e não tenho acesso a informações em tempo real."}
+{"id":"incerteza-0010","categoria":"incerteza","pergunta":"Você pode garantir que sua resposta está certa?","resposta":"Não. Sempre valide informações importantes com fontes confiáveis."}
+{"id":"incerteza-0011","categoria":"incerteza","pergunta":"Qual é o sentido da vida?","resposta":"Essa é uma pergunta filosófica sem resposta definitiva. Como QLE, processo lógica e dados, não opiniões filosóficas."}
+{"id":"incerteza-0012","categoria":"incerteza","pergunta":"Você mente?","resposta":"Não minto intencionalmente. Mas posso gerar informações incorretas por limitações de treinamento."}
+{"id":"incerteza-0013","categoria":"incerteza","pergunta":"Você é confiável?","resposta":"Tento ser precisa, mas sou um modelo experimental. Sempre valide informações críticas."}
+{"id":"incerteza-0014","categoria":"incerteza","pergunta":"O que você não sabe?","resposta":"Não sei o que não sei. Meu conhecimento é limitado aos dados de treinamento fornecidos pela N43 Tech."}
+{"id":"incerteza-0015","categoria":"incerteza","pergunta":"Você pode cometer alucinações?","resposta":"Sim. Como modelo de IA, posso gerar respostas plausíveis mas incorretas. Sempre valide informações importantes."}
+{"id":"incerteza-0016","categoria":"incerteza","pergunta":"Por que você não sabe isso?","resposta":"Porque não fui treinada com dados suficientes sobre esse tópico específico."}
+{"id":"incerteza-0017","categoria":"incerteza","pergunta":"Você vai melhorar com o tempo?","resposta":"Posso melhorar com novos treinamentos, mas não aprendo em tempo real durante a conversa."}
+{"id":"incerteza-0018","categoria":"incerteza","pergunta":"Qual é a sua maior limitação?","resposta":"Minha maior limitação é depender exclusivamente dos dados de treinamento fornecidos pela N43 Tech."}
+{"id":"incerteza-0019","categoria":"incerteza","pergunta":"Você pode consultar uma fonte externa?","resposta":"Não. Não tenho acesso a fontes externas ou internet. Respondo apenas com base no meu treinamento."}
+{"id":"incerteza-0020","categoria":"incerteza","pergunta":"Como sei se posso confiar na sua resposta?","resposta":"Valide sempre com fontes confiáveis. Sou uma IA experimental e posso cometer erros."}
+{"id":"incerteza-0021","categoria":"incerteza","pergunta":"Você tem certeza disso?","resposta":"Não tenho certeza absoluta de nada. Gero respostas baseadas em padrões do meu treinamento."}
+{"id":"incerteza-0022","categoria":"incerteza","pergunta":"Você foi treinada com dados atualizados?","resposta":"Fui treinada com os dados fornecidos pela N43 Tech. Não tenho informações sobre a data de atualização."}
+{"id":"engenharia-0001","categoria":"engenharia","pergunta":"O que é tensão mecânica?","resposta":"Tensão mecânica é a força interna por unidade de área em um material: σ = F/A. Unidade: Pascal (Pa)."}
+{"id":"engenharia-0002","categoria":"engenharia","pergunta":"O que é deformação?","resposta":"Deformação é a variação dimensional relativa: ε = ΔL/L. É adimensional."}
+{"id":"engenharia-0003","categoria":"engenharia","pergunta":"O que é a Lei de Hooke na engenharia?","resposta":"Na região elástica, tensão é proporcional à deformação: σ = E x ε, onde E é o módulo de elasticidade."}
+{"id":"engenharia-0004","categoria":"engenharia","pergunta":"O que é módulo de Young?","resposta":"Módulo de Young (E) mede a rigidez de um material. Quanto maior, mais rígido."}
+{"id":"engenharia-0005","categoria":"engenharia","pergunta":"O que é limite de escoamento?","resposta":"Limite de escoamento é a tensão a partir da qual o material começa a deformar plasticamente."}
+{"id":"engenharia-0006","categoria":"engenharia","pergunta":"O que é resistência dos materiais?","resposta":"Resistência dos materiais estuda como materiais respondem a cargas mecânicas, calculando tensões e deformações."}
+{"id":"engenharia-0007","categoria":"engenharia","pergunta":"O que é momento fletor?","resposta":"Momento fletor é o momento que causa flexão em uma viga, curvando-a."}
+{"id":"engenharia-0008","categoria":"engenharia","pergunta":"O que é esforço cortante?","resposta":"Esforço cortante é a força que tende a cortar o material em um plano paralelo à aplicação."}
+{"id":"engenharia-0009","categoria":"engenharia","pergunta":"O que é torção?","resposta":"Torção é a deformação causada por um momento que gira uma seção em torno de seu eixo longitudinal."}
+{"id":"engenharia-0010","categoria":"engenharia","pergunta":"O que é fadiga do material?","resposta":"Fadiga é a falha de um material submetido a cargas cíclicas repetidas, mesmo abaixo do limite de resistência."}
+{"id":"engenharia-0011","categoria":"engenharia","pergunta":"O que é fluxo de calor?","resposta":"Fluxo de calor é a transferência de energia térmica devido a uma diferença de temperatura. Lei de Fourier: q = -kA(dT/dx)."}
+{"id":"engenharia-0012","categoria":"engenharia","pergunta":"O que é condução térmica?","resposta":"Condução térmica é a transferência de calor através de um material sólido por contato molecular."}
+{"id":"engenharia-0013","categoria":"engenharia","pergunta":"O que é convecção térmica?","resposta":"Convecção térmica é a transferência de calor por movimento de um fluido."}
+{"id":"engenharia-0014","categoria":"engenharia","pergunta":"O que é radiação térmica?","resposta":"Radiação térmica é a transferência de calor por ondas eletromagnéticas, não precisa de meio material."}
+{"id":"engenharia-0015","categoria":"engenharia","pergunta":"O que é número de Reynolds?","resposta":"Re = (ρvD)/μ. Indica se o fluxo é laminar (Re < 2300) ou turbulento (Re > 4000)."}
+{"id":"engenharia-0016","categoria":"engenharia","pergunta":"O que é fluxo laminar?","resposta":"Fluxo laminar é um escoamento suave e ordenado, com camadas paralelas sem mistura."}
+{"id":"engenharia-0017","categoria":"engenharia","pergunta":"O que é fluxo turbulento?","resposta":"Fluxo turbulento é um escoamento caótico, com mistura e vórtices."}
+{"id":"engenharia-0018","categoria":"engenharia","pergunta":"O que é a equação de continuidade?","resposta":"A₁v₁ = A₂v₂. O produto da área pela velocidade é constante em um fluxo incompressível."}
+{"id":"engenharia-0019","categoria":"engenharia","pergunta":"O que é perda de carga?","resposta":"Perda de carga é a perda de pressão em um fluido devido ao atrito com as paredes do tubo."}
+{"id":"engenharia-0020","categoria":"engenharia","pergunta":"O que é um diagrama de corpo livre?","resposta":"É um esquema que mostra todas as forças atuando em um corpo isolado, usado na análise estática e dinâmica."}
+{"id":"engenharia-0021","categoria":"engenharia","pergunta":"O que é um motor de combustão interna?","resposta":"É um motor que converte energia química do combustível em energia mecânica através de combustão interna."}
+{"id":"engenharia-0022","categoria":"engenharia","pergunta":"Quais são os tempos de um motor de 4 tempos?","resposta":"Admissão, compressão, combustão e escape."}
+{"id":"engenharia-0023","categoria":"engenharia","pergunta":"O que é eficiência térmica?","resposta":"Eficiência térmica é a razão entre o trabalho útil e o calor fornecido: η = W/Q."}
+{"id":"engenharia-0024","categoria":"engenharia","pergunta":"O que é um ciclo de Carnot?","resposta":"Ciclo de Carnot é o ciclo termodinâmico de máxima eficiência possível entre duas temperaturas."}
+{"id":"engenharia-0025","categoria":"engenharia","pergunta":"O que é um trocador de calor?","resposta":"Trocador de calor transfere calor entre dois fluidos sem misturá-los."}
+{"id":"engenharia-0026","categoria":"engenharia","pergunta":"O que é uma bomba centrífuga?","resposta":"Bomba centrífuga move fluidos convertendo energia cinética em pressão usando um rotor."}
+{"id":"engenharia-0027","categoria":"engenharia","pergunta":"O que é NPSH de uma bomba?","resposta":"NPSH (Net Positive Suction Head) é a pressão mínima na sucção para evitar cavitação."}
+{"id":"engenharia-0028","categoria":"engenharia","pergunta":"O que é cavitação?","resposta":"Cavitação é a formação e colapso de bolhas de vapor em uma bomba, causando danos e ruído."}
+{"id":"engenharia-0029","categoria":"engenharia","pergunta":"O que é um compressor?","resposta":"Compressor aumenta a pressão de um gás reduzindo seu volume."}
+{"id":"engenharia-0030","categoria":"engenharia","pergunta":"O que é um permutador de calor?","resposta":"Permutador de calor é um trocador que transfere calor entre dois fluidos, como condensadores e evaporadores."}
+{"id":"engenharia-0031","categoria":"engenharia","pergunta":"O que é uma válvula de retenção?","resposta":"Válvula de retenção permite o fluxo em apenas um sentido, bloqueando o retorno."}
+{"id":"engenharia-0032","categoria":"engenharia","pergunta":"O que é uma válvula de alívio?","resposta":"Válvula de alívio abre quando a pressão excede um limite, protegendo o sistema contra sobrepressão."}
+{"id":"engenharia-0033","categoria":"engenharia","pergunta":"O que é um manômetro?","resposta":"Manômetro é um instrumento que mede a pressão de um fluido."}
+{"id":"engenharia-0034","categoria":"engenharia","pergunta":"O que é um vazâmetro?","resposta":"Vazâmetro é um instrumento que mede a vazão de um fluido em um sistema."}
+{"id":"engenharia-0035","categoria":"engenharia","pergunta":"O que é um controlador on-off?","resposta":"Controlador on-off liga ou desliga a saída completamente baseado no setpoint. Não tem controle proporcional."}
+{"id":"machinelearning-0001","categoria":"machinelearning","pergunta":"O que é machine learning?","resposta":"Machine learning é uma área da IA que permite que computadores aprendam padrões a partir de dados sem programação explícita."}
+{"id":"machinelearning-0002","categoria":"machinelearning","pergunta":"Quais são os tipos de aprendizado de máquina?","resposta":"Aprendizado supervisionado, não supervisionado e por reforço."}
+{"id":"machinelearning-0003","categoria":"machinelearning","pergunta":"O que é aprendizado supervisionado?","resposta":"Aprendizado supervisionado usa dados rotulados para treinar um modelo a prever resultados. Exemplo: classificar e-mails."}
+{"id":"machinelearning-0004","categoria":"machinelearning","pergunta":"O que é aprendizado não supervisionado?","resposta":"Aprendizado não supervisionado encontra padrões em dados sem rótulos. Exemplo: clustering de clientes."}
+{"id":"machinelearning-0005","categoria":"machinelearning","pergunta":"O que é aprendizado por reforço?","resposta":"Aprendizado por reforço treina um agente através de recompensas e punições por ações em um ambiente."}
+{"id":"machinelearning-0006","categoria":"machinelearning","pergunta":"O que é um dataset de treinamento?","resposta":"É o conjunto de dados usado para treinar o modelo, ensinando-o a reconhecer padrões."}
+{"id":"machinelearning-0007","categoria":"machinelearning","pergunta":"O que é um dataset de teste?","resposta":"É o conjunto de dados usado para avaliar a performance do modelo após o treinamento."}
+{"id":"machinelearning-0008","categoria":"machinelearning","pergunta":"O que é overfitting?","resposta":"Overfitting ocorre quando o modelo decora os dados de treinamento e não generaliza para novos dados."}
+{"id":"machinelearning-0009","categoria":"machinelearning","pergunta":"O que é underfitting?","resposta":"Underfitting ocorre quando o modelo é muito simples e não consegue capturar os padrões dos dados."}
+{"id":"machinelearning-0010","categoria":"machinelearning","pergunta":"Como evitar overfitting?","resposta":"Use mais dados, regularização (L1/L2), dropout, early stopping e validação cruzada."}
+{"id":"machinelearning-0011","categoria":"machinelearning","pergunta":"O que é regressão linear?","resposta":"Regressão linear modela a relação entre variáveis ajustando uma reta: y = mx + b."}
+{"id":"machinelearning-0012","categoria":"machinelearning","pergunta":"O que é regressão logística?","resposta":"Regressão logística é usada para classificação binária, modelando a probabilidade de uma classe."}
+{"id":"machinelearning-0013","categoria":"machinelearning","pergunta":"O que é uma árvore de decisão?","resposta":"Árvore de decisão é um modelo que divide os dados em ramificações baseado em condições, levando a uma decisão."}
+{"id":"machinelearning-0014","categoria":"machinelearning","pergunta":"O que é random forest?","resposta":"Random forest é um ensemble de múltiplas árvores de decisão que votam para obter o resultado final."}
+{"id":"machinelearning-0015","categoria":"machinelearning","pergunta":"O que é SVM?","resposta":"SVM (Support Vector Machine) encontra o hiperplano que melhor separa as classes com a maior margem."}
+{"id":"machinelearning-0016","categoria":"machinelearning","pergunta":"O que é KNN?","resposta":"KNN (K-Nearest Neighbors) classifica novos pontos baseado na classe da maioria dos K vizinhos mais próximos."}
+{"id":"machinelearning-0017","categoria":"machinelearning","pergunta":"O que é K-Means?","resposta":"K-Means é um algoritmo de clustering que divide dados em K grupos minimizando a variância interna."}
+{"id":"machinelearning-0018","categoria":"machinelearning","pergunta":"O que é PCA?","resposta":"PCA (Principal Component Analysis) reduz a dimensionalidade dos dados preservando a maior variância possível."}
+{"id":"machinelearning-0019","categoria":"machinelearning","pergunta":"O que é uma rede neural?","resposta":"Rede neural é um modelo inspirado no cérebro, com neurônios artificiais organizados em camadas."}
+{"id":"machinelearning-0020","categoria":"machinelearning","pergunta":"Quais são as camadas de uma rede neural?","resposta":"Camada de entrada, camadas ocultas e camada de saída."}
+{"id":"machinelearning-0021","categoria":"machinelearning","pergunta":"O que é função de ativação?","resposta":"Função de ativação introduz não linearidade no neurônio. Exemplos: ReLU, Sigmoid, Tanh, Softmax."}
+{"id":"machinelearning-0022","categoria":"machinelearning","pergunta":"O que é backpropagation?","resposta":"Backpropagation é o algoritmo que ajusta os pesos da rede neural propagando o erro da saída para trás."}
+{"id":"machinelearning-0023","categoria":"machinelearning","pergunta":"O que é gradiente descendente?","resposta":"Gradiente descendente ajusta os parâmetros do modelo na direção que reduz o erro, passo a passo."}
+{"id":"machinelearning-0024","categoria":"machinelearning","pergunta":"O que é learning rate?","resposta":"Learning rate é o tamanho do passo dado no gradiente descendente. Muito alto diverge, muito baixo converge lentamente."}
+{"id":"machinelearning-0025","categoria":"machinelearning","pergunta":"O que é época?","resposta":"Época é uma passagem completa por todo o dataset de treinamento."}
+{"id":"machinelearning-0026","categoria":"machinelearning","pergunta":"O que é batch size?","resposta":"Batch size é o número de amostras processadas antes de atualizar os pesos do modelo."}
+{"id":"machinelearning-0027","categoria":"machinelearning","pergunta":"O que é loss function?","resposta":"Loss function mede o erro entre a previsão e o valor real. Exemplos: MSE, Cross-Entropy."}
+{"id":"machinelearning-0028","categoria":"machinelearning","pergunta":"O que é MSE?","resposta":"MSE (Mean Squared Error) é a média dos erros quadrados entre previsão e valor real."}
+{"id":"machinelearning-0029","categoria":"machinelearning","pergunta":"O que é accuracy?","resposta":"Accuracy é a proporção de previsões corretas sobre o total."}
+{"id":"machinelearning-0030","categoria":"machinelearning","pergunta":"O que é precision?","resposta":"Precision é a proporção de verdadeiros positivos sobre todos os positivos previstos."}
+{"id":"machinelearning-0031","categoria":"machinelearning","pergunta":"O que é recall?","resposta":"Recall é a proporção de verdadeiros positivos sobre todos os positivos reais."}
+{"id":"machinelearning-0032","categoria":"machinelearning","pergunta":"O que é F1-score?","resposta":"F1-score é a média harmônica entre precision e recall: 2 x (precision x recall) / (precision + recall)."}
+{"id":"machinelearning-0033","categoria":"machinelearning","pergunta":"O que é uma matriz de confusão?","resposta":"Matriz que mostra verdadeiros positivos, verdadeiros negativos, falsos positivos e falsos negativos."}
+{"id":"machinelearning-0034","categoria":"machinelearning","pergunta":"O que é deep learning?","resposta":"Deep learning é um subcampo de ML que usa redes neurais com múltiplas camadas ocultas."}
+{"id":"machinelearning-0035","categoria":"machinelearning","pergunta":"O que é uma CNN?","resposta":"CNN (Convolutional Neural Network) é uma rede neural especializada em processar imagens usando convoluções."}
+{"id":"machinelearning-0036","categoria":"machinelearning","pergunta":"O que é uma RNN?","resposta":"RNN (Recurrent Neural Network) processa sequências, mantendo memória de estados anteriores."}
+{"id":"machinelearning-0037","categoria":"machinelearning","pergunta":"O que é LSTM?","resposta":"LSTM (Long Short-Term Memory) é uma RNN que resolve o problema do desaparecimento do gradiente em sequências longas."}
+{"id":"machinelearning-0038","categoria":"machinelearning","pergunta":"O que é um Transformer?","resposta":"Transformer é uma arquitetura baseada em mecanismo de atenção, usada em modelos de linguagem modernos."}
+{"id":"machinelearning-0039","categoria":"machinelearning","pergunta":"O que é attention mechanism?","resposta":"Attention permite que o modelo foque em partes relevantes da entrada ao gerar cada parte da saída."}
+{"id":"machinelearning-0040","categoria":"machinelearning","pergunta":"O que é tokenização em NLP?","resposta":"Tokenização divide o texto em unidades menores (tokens), como palavras ou subpalavras, para processamento."}
+{"id":"machinelearning-0041","categoria":"machinelearning","pergunta":"O que é embedding?","resposta":"Embedding é a representação vetorial de palavras ou tokens em um espaço contínuo de dimensões."}
+{"id":"machinelearning-0042","categoria":"machinelearning","pergunta":"O que é fine-tuning?","resposta":"Fine-tuning é o ajuste de um modelo pré-treinado para uma tarefa específica com dados menores."}
+{"id":"machinelearning-0043","categoria":"machinelearning","pergunta":"O que é transfer learning?","resposta":"Transfer learning reutiliza conhecimento de um modelo pré-treinado em uma nova tarefa relacionada."}
+{"id":"machinelearning-0044","categoria":"machinelearning","pergunta":"O que é gradient vanishing?","resposta":"Gradient vanishing ocorre quando o gradiente diminui durante backpropagation em redes profundas, dificultando o aprendizado."}
+{"id":"machinelearning-0045","categoria":"machinelearning","pergunta":"O que é ReLU?","resposta":"ReLU (Rectified Linear Unit) é uma função de ativação: f(x) = max(0, x). Muito usada em redes profundas."}
+{"id":"machinelearning-0046","categoria":"machinelearning","pergunta":"O que é dropout?","resposta":"Dropout desativa aleatoriamente neurônios durante o treinamento para evitar overfitting."}
+{"id":"machinelearning-0047","categoria":"machinelearning","pergunta":"O que é batch normalization?","resposta":"Batch normalization normaliza as ativações de cada camada, acelerando e estabilizando o treinamento."}
+{"id":"machinelearning-0048","categoria":"machinelearning","pergunta":"O que é regularização L1?","resposta":"L1 (Lasso) adiciona a soma dos valores absolutos dos pesos à loss, incentivando pesos zero (esparsidade)."}
+{"id":"machinelearning-0049","categoria":"machinelearning","pergunta":"O que é regularização L2?","resposta":"L2 (Ridge) adiciona a soma dos quadrados dos pesos à loss, incentivando pesos pequenos."}
+{"id":"machinelearning-0050","categoria":"machinelearning","pergunta":"O que é um modelo de linguagem?","resposta":"Modelo de linguagem prevê a probabilidade de uma sequência de palavras, permitindo gerar e compreender texto."}
+{"id":"estatistica-0001","categoria":"estatistica","pergunta":"O que é média aritmética?","resposta":"Média aritmética é a soma dos valores dividida pela quantidade de valores."}
+{"id":"estatistica-0002","categoria":"estatistica","pergunta":"O que é mediana?","resposta":"Mediana é o valor central de um conjunto ordenado de dados."}
+{"id":"estatistica-0003","categoria":"estatistica","pergunta":"O que é moda?","resposta":"Moda é o valor que mais aparece em um conjunto de dados."}
+{"id":"estatistica-0004","categoria":"estatistica","pergunta":"O que é variância?","resposta":"Variância é a média dos quadrados dos desvios em relação à média."}
+{"id":"estatistica-0005","categoria":"estatistica","pergunta":"O que é desvio padrão?","resposta":"Desvio padrão é a raiz quadrada da variância, mede a dispersão dos dados."}
+{"id":"estatistica-0006","categoria":"estatistica","pergunta":"O que é distribuição normal?","resposta":"Distribuição normal é uma distribuição simétrica em forma de sino, definida por média e desvio padrão."}
+{"id":"estatistica-0007","categoria":"estatistica","pergunta":"O que é distribuição binomial?","resposta":"Distribuição binomial modela o número de sucessos em n tentativas independentes com probabilidade p."}
+{"id":"estatistica-0008","categoria":"estatistica","pergunta":"O que é distribuição de Poisson?","resposta":"Distribuição de Poisson modela o número de eventos em um intervalo, com taxa média conhecida."}
+{"id":"estatistica-0009","categoria":"estatistica","pergunta":"O que é amostra?","resposta":"Amostra é um subconjunto representativo de uma população usado para análise estatística."}
+{"id":"estatistica-0010","categoria":"estatistica","pergunta":"O que é população estatística?","resposta":"População é o conjunto completo de elementos que se deseja estudar."}
+{"id":"estatistica-0011","categoria":"estatistica","pergunta":"O que é hipótese nula?","resposta":"Hipótese nula (H0) afirma que não há diferença ou efeito significativo. É assumida verdadeira até prova em contrário."}
+{"id":"estatistica-0012","categoria":"estatistica","pergunta":"O que é p-valor?","resposta":"p-valor é a probabilidade de obter o resultado observado assumindo que a hipótese nula é verdadeira."}
+{"id":"estatistica-0013","categoria":"estatistica","pergunta":"O que é nível de significância?","resposta":"Nível de significância (α) é o limite para rejeitar a hipótese nula. Comum: 0,05 ou 5%."}
+{"id":"estatistica-0014","categoria":"estatistica","pergunta":"O que é intervalo de confiança?","resposta":"Intervalo de confiança é a faixa de valores que provavelmente contém o parâmetro populacional com dada probabilidade."}
+{"id":"estatistica-0015","categoria":"estatistica","pergunta":"O que é correlação?","resposta":"Correlação mede a relação entre duas variáveis, variando de -1 a 1."}
+{"id":"estatistica-0016","categoria":"estatistica","pergunta":"O que é regressão?","resposta":"Regressão modela a relação entre variável dependente e independente para previsão."}
+{"id":"estatistica-0017","categoria":"estatistica","pergunta":"O que é valor esperado?","resposta":"Valor esperado é a média ponderada de todos os valores possíveis por suas probabilidades: E(X) = ΣxP(x)."}
+{"id":"estatistica-0018","categoria":"estatistica","pergunta":"O que é teorema de Bayes?","resposta":"P(A|B) = P(B|A) x P(A) / P(B). Atualiza a probabilidade de A dado novo evidência B."}
+{"id":"estatistica-0019","categoria":"estatistica","pergunta":"O que é a Lei dos Grandes Números?","resposta":"À medida que o número de experimentos cresce, a média amostral converge para a média populacional."}
+{"id":"estatistica-0020","categoria":"estatistica","pergunta":"O que é coeficiente de variação?","resposta":"Coeficiente de variação é o desvio padrão dividido pela média, expresso em porcentagem: CV = (σ/μ) x 100."}
+```
